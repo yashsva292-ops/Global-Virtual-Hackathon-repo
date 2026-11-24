@@ -260,14 +260,14 @@ const VerticalSlotReel: React.FC<{
     // Keep an active rolling jitter if progress hasn't moved yet
     setTapeIndex((prev) => Math.max(prev, computedIndex));
 
-    let stepSpeed = 48 + (slotIndex % 3) * 8;
+    let stepSpeed = 46 + (slotIndex % 3) * 8;
     if (isFinal) {
       if (progress >= 99) {
-        stepSpeed = 450; // Dramatic crawl during 99% pause
+        stepSpeed = 480; // Dramatic calm crawl during 99% pause
       } else if (progress >= 92) {
-        stepSpeed = 220; // Noticeable deceleration
+        stepSpeed = 260; // Smooth heavy deceleration
       } else if (progress >= 80) {
-        stepSpeed = 110;
+        stepSpeed = 130; // Smooth initial deceleration
       }
     }
 
@@ -283,8 +283,8 @@ const VerticalSlotReel: React.FC<{
     return () => clearInterval(timer);
   }, [isLocked, progress, isFinal, slotIndex, tape.length, threshold]);
 
-  const cellHeight = 16; // Exact cell height in px
-  const cellWidth = 11;  // Exact cell width in px
+  const cellHeight = 19; // Comfortable readable height in px
+  const cellWidth = 13;  // Slightly wider for clear dot-matrix visibility
 
   return (
     <div
@@ -302,13 +302,13 @@ const VerticalSlotReel: React.FC<{
           isLocked
             ? {
                 type: 'spring',
-                stiffness: isFinal ? 140 : 320,
-                damping: isFinal ? 18 : 22,
-                mass: isFinal ? 1.1 : 0.8,
+                stiffness: isFinal ? 90 : 280,
+                damping: isFinal ? 20 : 24,
+                mass: isFinal ? 1.4 : 0.8,
               }
             : {
-                duration: isFinal && progress >= 92 ? 0.22 : 0.05,
-                ease: 'linear',
+                duration: isFinal && progress >= 92 ? 0.28 : 0.05,
+                ease: 'easeInOut',
               }
         }
         className="flex flex-col items-center"
@@ -318,12 +318,12 @@ const VerticalSlotReel: React.FC<{
           return (
             <div
               key={idx}
-              className="flex items-center justify-center font-terminal-dots select-none uppercase tracking-[0.12em]"
+              className="flex items-center justify-center font-terminal-dots select-none uppercase tracking-[0.14em]"
               style={{
                 height: `${cellHeight}px`,
                 width: `${cellWidth}px`,
-                fontSize: '11px',
-                lineHeight: '16px',
+                fontSize: '13px',
+                lineHeight: `${cellHeight}px`,
                 color: isAtTarget ? '#111b21' : '#555555',
                 textShadow: isAtTarget ? '0 0.5px 1px rgba(0,0,0,0.18)' : 'none',
                 opacity: isAtTarget ? 1 : 0.7,

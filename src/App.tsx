@@ -2,11 +2,11 @@ import React, { useState, useEffect, useRef } from 'react';
 import { E2EEHomePage } from './components/features/E2EEHomePage';
 import { E2EEMainPage } from './components/features/E2EEMainPage';
 import { CaesarCipherInteraction } from './components/features/CaesarCipherInteraction';
-import { Skiper8 } from './components/ui/skiper8';
+import { GreetingPreloader } from './components/GreetingPreloader';
 import { WordsPreloader, type WordPreloaderPhase } from './components/WordsPreloader';
 
 export const App: React.FC = () => {
-  // Greeting Preloader (Skiper 8 Words Preloader) plays on first page entry
+  // Original Greeting Preloader ('Hello', 'Bonjour', ...) with calm natural timing
   const [hasVisited, setHasVisited] = useState(false);
   const [currentView, setCurrentView] = useState<'home' | 'main' | 'simulator'>('home');
   const [preloaderPhase, setPreloaderPhase] = useState<WordPreloaderPhase>('idle');
@@ -84,11 +84,11 @@ export const App: React.FC = () => {
   return (
     <div className="relative w-full min-h-screen bg-[#0b141a] text-white selection:bg-[#00a884] selection:text-white">
       {/* 
-        Initial Visitor Arrival: Skiper 8 Words Preloader (Dennis Snellenberg curved morph)
-        Cycles multilingual greetings before smoothly rolling up in a curved path
+        Initial Visitor Arrival: Original Greeting Preloader
+        Cycles multilingual greetings ('Hello', 'Bonjour', ...) with calm natural cadence
       */}
       {!hasVisited && (
-        <Skiper8 onComplete={() => setHasVisited(true)} />
+        <GreetingPreloader onComplete={() => setHasVisited(true)} />
       )}
 
       {/* 
