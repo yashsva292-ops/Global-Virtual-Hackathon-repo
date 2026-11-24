@@ -191,87 +191,150 @@ const RollDownText: React.FC<{
 
 // Target word: "SCROLL"
 const TARGET_WORD = 'SCROLL';
-// Alphanumeric character pool for rapid lottery scrambling
-const CHAR_POOL = ['A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z','0','1','2','3','4','5','6','7','8','9'];
 
-// Individual character slot that scrambles rapidly through random characters in place and settles into its target letter
-const LotterySlotChar: React.FC<{
+// Curated high-contrast glyph pool for vertical slot reel spinning
+const SLOT_GLYPH_POOL = ['S', 'C', 'R', 'O', 'L', 'A', 'E', 'B', 'M', 'K', 'P', 'T', 'X', 'Z', '8', '3', '0', '9'];
+
+// Strict sequential settling thresholds:
+// All 6 letters start rolling simultaneously.
+// S rolls and locks in at 26% (leaving 5 letters rolling)
+// C rolls and locks in at 44% (leaving 4 letters rolling)
+// R rolls and locks in at 62% (leaving 3 letters rolling)
+// O rolls and locks in at 78% (leaving 2 letters rolling)
+// First L rolls and locks in at 90% (leaving the final L rolling)
+// Final L decelerates heavily, pauses through 99%, and settles strictly at 100% on the shared timeline!
+const LOCK_THRESHOLDS = [26, 44, 62, 78, 90, 100];
+
+/**
+ * Vertical Rolling Physical Slot-Machine Reel Component
+ * - All 6 letters roll simultaneously on independent vertical reels from the start.
+ * - S rolls and locks into place, while the remaining letters keep rolling.
+ * - Next, C rolls and locks into place, while the remaining keep rolling.
+ * - Next, R rolls and locks, then O rolls and locks, then the first L rolls and locks.
+ * - Finally, the last L decelerates and locks home simultaneously as the progress counter hits 100%.
+ * - Each letter rolls smoothly without repeating the final letter twice.
+ * - Fixed cell height/width ensures rock-solid stability with zero layout shift.
+ */
+const VerticalSlotReel: React.FC<{
   targetChar: string;
   slotIndex: number;
-  totalSlots: number;
   progress: number;
-  isComplete: boolean;
-}> = ({ targetChar, slotIndex, totalSlots, progress, isComplete }) => {
-  const [currentChar, setCurrentChar] = useState<string>(() =>
-    CHAR_POOL[(slotIndex * 7) % CHAR_POOL.length]
-  );
+  isLoaded: boolean;
+}> = ({ targetChar, slotIndex, progress, isLoaded }) => {
+  const threshold = LOCK_THRESHOLDS[slotIndex];
+  const isFinal = slotIndex === TARGET_WORD.length - 1;
+  const isLocked = isLoaded || progress >= threshold;
 
-  // Progressive lock threshold for each slot:
-  // Slot 0 locks at 16%, Slot 1 at 33%, Slot 2 at 50%, ..., Slot 5 at 100%
-  const lockThreshold = ((slotIndex + 1) / totalSlots) * 100;
-  const isLocked = isComplete || progress >= lockThreshold;
-  const isFinal = slotIndex === totalSlots - 1;
+  // Single sequential reel strip:
+  // Starts with random distinct glyphs and terminates EXACTLY once with targetChar at the end!
+  // No duplicate targetChar before the end, ensuring it rolls only 1 time into place.
+  const [tape] = useState<string[]>(() => {
+    const list: string[] = [];
+    const poolWithoutTarget = SLOT_GLYPH_POOL.filter((g) => g !== targetChar);
+    const count = 16 + slotIndex * 4; // Length scaled so each reel steps steadily towards its target
+    for (let i = 0; i < count; i++) {
+      list.push(poolWithoutTarget[(i * 7 + slotIndex * 3) % poolWithoutTarget.length]);
+    }
+    list.push(targetChar); // Exactly 1 final destination glyph
+    return list;
+  });
+
+  // Calculate target index on the tape based on progress approaching its lock threshold
+  const [tapeIndex, setTapeIndex] = useState(0);
 
   useEffect(() => {
     if (isLocked) {
-      setCurrentChar(targetChar);
+      // Snaps decisively into the target letter (the final item on the reel tape)
+      setTapeIndex(tape.length - 1);
       return;
     }
 
-    // Fast instant lottery scramble roll (every 28ms - 40ms)
-    let speed = 28 + (slotIndex * 4);
+    // Dynamic step cadence:
+    // When rolling freely, steps briskly (45-65ms)
+    // As progress approaches this slot's threshold, it smoothly rolls towards the final letter
+    const progressRatio = Math.min(1, Math.max(0, progress / threshold));
+    // Index increases progressively as progress approaches threshold, rolling once to the end
+    const maxUnlockedIndex = tape.length - 2;
+    const computedIndex = Math.floor(progressRatio * maxUnlockedIndex);
+
+    // Keep an active rolling jitter if progress hasn't moved yet
+    setTapeIndex((prev) => Math.max(prev, computedIndex));
+
+    let stepSpeed = 48 + (slotIndex % 3) * 8;
     if (isFinal) {
       if (progress >= 99) {
-        speed = 420; // Dramatic suspense pause at 99% before snapping into 100%
+        stepSpeed = 450; // Dramatic crawl during 99% pause
       } else if (progress >= 92) {
-        speed = 180;
+        stepSpeed = 220; // Noticeable deceleration
+      } else if (progress >= 80) {
+        stepSpeed = 110;
       }
     }
 
-    const interval = setInterval(() => {
-      const rand = CHAR_POOL[Math.floor(Math.random() * CHAR_POOL.length)];
-      setCurrentChar(rand);
-    }, speed);
+    const timer = setInterval(() => {
+      setTapeIndex((prev) => {
+        if (prev < maxUnlockedIndex) {
+          return prev + 1;
+        }
+        return prev;
+      });
+    }, stepSpeed);
 
-    return () => clearInterval(interval);
-  }, [isLocked, targetChar, slotIndex, isFinal, progress]);
+    return () => clearInterval(timer);
+  }, [isLocked, progress, isFinal, slotIndex, tape.length, threshold]);
+
+  const cellHeight = 16; // Exact cell height in px
+  const cellWidth = 11;  // Exact cell width in px
 
   return (
-    <span
-      className={`font-terminal-dots inline-block text-center transition-transform duration-75 select-none ${
-        isLocked
-          ? 'text-[#1a1a1a] scale-100 font-bold'
-          : 'text-[#404040] scale-95 opacity-90'
-      }`}
+    <div
+      className="relative inline-block overflow-hidden select-none align-middle"
       style={{
-        width: '1.2ch',
-        letterSpacing: '0.04em',
-        fontSize: '11.5px',
-        lineHeight: 1,
+        height: `${cellHeight}px`,
+        width: `${cellWidth}px`,
       }}
     >
-      {currentChar}
-    </span>
-  );
-};
-
-const ScrollLotteryMachine: React.FC<{ progress: number; isLoaded: boolean }> = ({
-  progress,
-  isLoaded,
-}) => {
-  return (
-    <span className="flex items-center text-sm sm:text-base font-normal tracking-wider text-[#1a1a1a]">
-      {TARGET_WORD.split('').map((char, idx) => (
-        <LotterySlotChar
-          key={idx}
-          targetChar={char}
-          slotIndex={idx}
-          totalSlots={TARGET_WORD.length}
-          progress={progress}
-          isComplete={isLoaded}
-        />
-      ))}
-    </span>
+      <motion.div
+        animate={{
+          y: -tapeIndex * cellHeight,
+        }}
+        transition={
+          isLocked
+            ? {
+                type: 'spring',
+                stiffness: isFinal ? 140 : 320,
+                damping: isFinal ? 18 : 22,
+                mass: isFinal ? 1.1 : 0.8,
+              }
+            : {
+                duration: isFinal && progress >= 92 ? 0.22 : 0.05,
+                ease: 'linear',
+              }
+        }
+        className="flex flex-col items-center"
+      >
+        {tape.map((ch, idx) => {
+          const isAtTarget = idx === tape.length - 1 && isLocked;
+          return (
+            <div
+              key={idx}
+              className="flex items-center justify-center font-terminal-dots select-none uppercase tracking-[0.12em]"
+              style={{
+                height: `${cellHeight}px`,
+                width: `${cellWidth}px`,
+                fontSize: '11px',
+                lineHeight: '16px',
+                color: isAtTarget ? '#111b21' : '#555555',
+                textShadow: isAtTarget ? '0 0.5px 1px rgba(0,0,0,0.18)' : 'none',
+                opacity: isAtTarget ? 1 : 0.7,
+              }}
+            >
+              {ch}
+            </div>
+          );
+        })}
+      </motion.div>
+    </div>
   );
 };
 
@@ -542,19 +605,29 @@ export const WordsPreloader: React.FC<WordsPreloaderProps> = ({
                       END-TO-END ENCRYPTION SIMULATOR
                     </span>
 
-                    {/* Bottom Right: Clean tactile informational pill (not clickable, no arrow) */}
+                    {/* Bottom Right: Tactile pill indicator with genuine dot-matrix lottery machine for "SCROLL" */}
                     <div className="relative flex items-center justify-end">
                       <div
-                        className="flex items-center rounded-[36px] transition-all duration-200 select-none cursor-default"
+                        className="group flex items-center rounded-[36px] transition-all duration-300 select-none cursor-default"
                         style={{
-                          padding: '10px 22px 8px 22px',
+                          padding: '10px 18px 8px 18px',
                           backgroundColor: '#f2f2f2',
                           boxShadow:
                             '0 2px 2px 0 rgba(0,0,0,0.08), 0 4px 7px 0 rgba(0,0,0,0.2), 0 0.5px 2px 0 rgba(0,0,0,0.15), inset 0 -1px 0.2px 0 rgba(0,0,0,0.12), inset 0 1px 0.2px 0 #ffffff',
                         }}
                       >
-                        {/* Dot-matrix lottery machine resolving sequentially into circular-dot 'SCROLL' */}
-                        <ScrollLotteryMachine progress={progress} isLoaded={isLoaded} />
+                        {/* Authentic dot-matrix letters rolling on independent vertical slot reels */}
+                        <span className="flex items-center tracking-normal text-[#1a1a1a]">
+                          {TARGET_WORD.split('').map((char, idx) => (
+                            <VerticalSlotReel
+                              key={idx}
+                              targetChar={char}
+                              slotIndex={idx}
+                              progress={progress}
+                              isLoaded={isLoaded}
+                            />
+                          ))}
+                        </span>
                       </div>
                     </div>
                   </div>

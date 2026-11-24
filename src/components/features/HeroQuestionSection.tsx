@@ -89,9 +89,12 @@ export const HeroQuestionSection: React.FC<HeroQuestionSectionProps> = ({ onScro
       {/* Scroll Down Indicator */}
       <motion.button
         onClick={onScrollClick}
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ opacity: { duration: 0.6, delay: 0.8 } }}
+        initial={{ opacity: 0, y: 15 }}
+        animate={{ opacity: 1, y: [0, 8, 0] }}
+        transition={{
+          opacity: { duration: 0.6, delay: 0.8 },
+          y: { repeat: Infinity, duration: 2.2, ease: 'easeInOut' },
+        }}
         className="flex flex-col items-center gap-2 text-xs sm:text-sm font-semibold text-[#54656f] hover:text-[#075e54] transition-colors cursor-pointer group pb-4"
       >
         <span>Scroll down to explore</span>

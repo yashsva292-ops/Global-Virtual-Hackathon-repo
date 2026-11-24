@@ -11,6 +11,7 @@ import {
   Send,
   Lock,
   CheckCheck,
+  X,
   Sparkles,
 } from 'lucide-react';
 
@@ -53,6 +54,17 @@ export const WhatsAppPhoneChat: React.FC<WhatsAppPhoneChatProps> = ({
         <div className="w-2.5 h-2.5 rounded-full bg-[#111b21] mr-3" />
         <div className="w-2.5 h-2.5 rounded-full bg-[#111b21]/70" />
       </div>
+
+      {/* Close Zoom Button (top right badge) */}
+      {onClose && (
+        <button
+          onClick={onClose}
+          className="absolute top-4 right-4 z-50 w-7 h-7 rounded-full bg-white/20 hover:bg-white/30 text-white flex items-center justify-center backdrop-blur-md transition-all cursor-pointer"
+          title="Zoom out"
+        >
+          <X className="w-4 h-4" />
+        </button>
+      )}
 
       {/* Phone Screen Container */}
       <div className="relative w-full h-full rounded-[34px] overflow-hidden flex flex-col bg-[#efeae2]">
