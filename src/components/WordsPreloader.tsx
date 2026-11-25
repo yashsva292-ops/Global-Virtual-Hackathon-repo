@@ -2,7 +2,6 @@ import React, { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ThreeSquaresLoader } from './ThreeSquaresLoader';
 import { LumenInteractiveShader } from './features/LumenInteractiveShader';
-import { Floating3DShapes } from './features/Floating3DShapes';
 
 export type WordPreloaderPhase = 'idle' | 'expanding' | 'loading' | 'exiting';
 
@@ -12,6 +11,7 @@ interface WordsPreloaderProps {
   triggerType?: 'button' | 'scroll';
   scrollFraction?: number; // 0 (hidden at bottom 100%) to 1 (fully loaded 0%)
   isInteractiveScroll?: boolean;
+  simulatorScrollProgress?: number; // 0 to 1 scroll driven exit into simulator
   onExpanded?: () => void;
   onLoadingComplete?: () => void;
   onExited?: () => void;
@@ -366,6 +366,7 @@ export const WordsPreloader: React.FC<WordsPreloaderProps> = ({
   triggerType = 'scroll',
   scrollFraction = 0,
   isInteractiveScroll = false,
+  simulatorScrollProgress = 0,
   onExpanded,
   onLoadingComplete,
   onExited,
@@ -534,7 +535,7 @@ export const WordsPreloader: React.FC<WordsPreloaderProps> = ({
     <AnimatePresence>
       {isVisible && (
         <motion.div
-          className="fixed inset-0 z-[120] pointer-events-auto overflow-hidden select-none"
+          className="fixed inset-0 z-[120] pointer-events-none overflow-hidden select-none"
           initial={{ y: '0vh' }}
           animate={
             phase === 'exiting'
@@ -542,8 +543,13 @@ export const WordsPreloader: React.FC<WordsPreloaderProps> = ({
                   y: '-100vh',
                   transition: { duration: 0.95, ease: [0.76, 0, 0.24, 1] },
                 }
-              : { y: '0vh' }
+              : undefined
           }
+          style={{
+            transform: phase !== 'exiting' && simulatorScrollProgress > 0
+              ? `translateY(${-simulatorScrollProgress * 100}vh)`
+              : undefined,
+          }}
           onAnimationComplete={() => {
             if (phase === 'exiting' && onExited) {
               onExited();
@@ -551,13 +557,10 @@ export const WordsPreloader: React.FC<WordsPreloaderProps> = ({
           }}
         >
           {/* 
-            ORGANIC BISCOTTI CREAM ADVANCING SURFACE:
-            - When scrubbing: continuously morphs along an asymmetric fluid wave contour.
-            - When committed: smoothly rolls up with continuous multi-keyframe contour morphing (wave0 -> wave4).
-            - When exiting: lifts together with the loading surface to uncover the simulator underneath.
+            ORGANIC BISCOTTI CREAM ADVANCING SURFACE (z-[110]):
           */}
           <svg
-            className="fixed inset-0 z-20 w-full h-full pointer-events-none"
+            className="fixed inset-0 z-[110] w-full h-full pointer-events-none"
             viewBox="0 0 1000 1000"
             preserveAspectRatio="none"
           >
@@ -594,7 +597,7 @@ export const WordsPreloader: React.FC<WordsPreloaderProps> = ({
             - Loading animation (counter and reels) only begins after entrance is 100% complete.
           */}
           <motion.div
-            className="fixed inset-0 z-30 flex items-center justify-center overflow-hidden"
+            className="fixed inset-0 z-[120] flex items-center justify-center overflow-hidden pointer-events-none"
             initial={{
               y: `${currentSurfaceYRef.current}vh`,
               opacity: triggerType === 'button' ? 0.65 : Math.min(1, Math.max(0.15, (100 - currentSurfaceYRef.current) / 45)),
@@ -636,7 +639,7 @@ export const WordsPreloader: React.FC<WordsPreloaderProps> = ({
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
-                className="absolute inset-x-0 bottom-0 h-[37.5%] pointer-events-none overflow-hidden z-10"
+                className="fixed inset-x-0 bottom-0 h-[37.5%] pointer-events-none overflow-hidden z-[112]"
                 style={{
                   maskImage:
                     'linear-gradient(to top, rgba(0,0,0,1) 0%, rgba(0,0,0,0.95) 55%, rgba(0,0,0,0.55) 82%, rgba(0,0,0,0.12) 94%, transparent 100%)',
@@ -668,17 +671,10 @@ export const WordsPreloader: React.FC<WordsPreloaderProps> = ({
               </motion.div>
             )}
 
-            {/* Floating 3D green/white bubbles & cross shapes originating on the loading page */}
-            {(isInteractiveScroll || phase === 'expanding' || phase === 'loading' || phase === 'exiting') && (
-              <div className="absolute inset-0 z-[15] pointer-events-none">
-                <Floating3DShapes isTransitioning={false} />
-              </div>
-            )}
-
-            {/* Studio Card (Loading Screen) - Unified physical surface progressively pulled upward */}
+            {/* Loading card sits in foreground (z-[120]), above Persistent3DTransition (z-[115]) */}
             {(isInteractiveScroll || phase === 'expanding' || phase === 'loading' || phase === 'exiting') && (
               <div
-                className="relative z-20 w-full max-w-4xl h-[78vh] max-h-[580px] bg-white/95 rounded-3xl shadow-[0_30px_90px_rgba(11,20,26,0.22)] overflow-hidden flex flex-col justify-between p-6 sm:p-8 md:p-10 text-slate-900 border border-[#d1d7db]/80 mx-4 sm:mx-8 backdrop-blur-xl"
+                className="relative z-[120] pointer-events-auto w-full max-w-4xl h-[78vh] max-h-[580px] bg-white/95 rounded-3xl shadow-[0_30px_90px_rgba(11,20,26,0.22)] overflow-hidden flex flex-col justify-between p-6 sm:p-8 md:p-10 text-slate-900 border border-[#d1d7db]/80 mx-4 sm:mx-8 backdrop-blur-xl"
               >
                 {/* Center Loading Telemetry: Space Grotesk font for "Loading" with calm roll down exit */}
                 <div className="flex flex-col md:flex-row items-center justify-between my-auto w-full gap-8">

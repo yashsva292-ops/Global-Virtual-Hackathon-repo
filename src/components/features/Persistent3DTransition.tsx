@@ -212,22 +212,24 @@ const SHAPES_CONFIG: ShapeDef[] = [
 ];
 
 function createReferenceMaterial(): THREE.MeshPhysicalMaterial {
-  // Soft ivory-white body with subtle warm sage undertone, gentle depth, and restrained rim lighting
+  // Visibly frosted ivory-sage body with distinct mint rim shading and surface highlights
   const mat = new THREE.MeshPhysicalMaterial({
-    color: new THREE.Color(0xfcfdfb),
-    roughness: 0.22,
-    metalness: 0.01,
-    clearcoat: 0.35,
-    clearcoatRoughness: 0.2,
+    color: new THREE.Color(0xe6f2eb),
+    emissive: new THREE.Color(0x176b50),
+    emissiveIntensity: 0.14,
+    roughness: 0.28,
+    metalness: 0.02,
+    clearcoat: 0.48,
+    clearcoatRoughness: 0.16,
     transmission: 0.02,
     thickness: 1.0,
-    ior: 1.42,
+    ior: 1.44,
     transparent: true,
-    opacity: 0.98,
+    opacity: 0.99,
   });
 
   mat.onBeforeCompile = (shader) => {
-    shader.uniforms.uGlowColor = { value: new THREE.Color(0xa7f3d0) }; // restrained soft mint/sage
+    shader.uniforms.uGlowColor = { value: new THREE.Color(0x10b981) }; // distinct mint/emerald rim definition
     shader.fragmentShader = shader.fragmentShader.replace(
       '#include <common>',
       `#include <common>
@@ -429,18 +431,38 @@ export const Persistent3DTransition: React.FC<Persistent3DTransitionProps> = ({
           scale = cfg.cardScale + (cfg.simScale - cfg.cardScale) * easeT;
         }
 
-        // Subtle ambient drift: strictly held still during loading (currentStage === 'card' and p === 0)
-        const isStill = currentStage === 'card' && p === 0;
-        const driftX = isReduced || isStill ? 0 : Math.sin(elapsedTime * 0.55 + idx * 1.4) * 0.12;
-        const driftY = isReduced || isStill ? 0 : Math.cos(elapsedTime * 0.45 + idx * 1.1) * 0.12;
-        const driftRotZ = isReduced || isStill ? 0 : Math.sin(elapsedTime * 0.35 + idx * 0.9) * 0.06;
-        const scaleBreath = isReduced || isStill ? 1 : 1 + Math.sin(elapsedTime * 0.5 + idx) * 0.025;
+        // Subtle ambient drift: gentle continuous motion that blends smoothly across stages
+        const driftFactor = currentStage === 'card' && p === 0 ? 0.45 : 1;
+        const driftX = isReduced ? 0 : Math.sin(elapsedTime * 0.55 + idx * 1.4) * 0.14 * driftFactor;
+        const driftY = isReduced ? 0 : Math.cos(elapsedTime * 0.45 + idx * 1.1) * 0.14 * driftFactor;
+        const driftRotZ = isReduced ? 0 : Math.sin(elapsedTime * 0.35 + idx * 0.9) * 0.06 * driftFactor;
+        const scaleBreath = isReduced ? 1 : 1 + Math.sin(elapsedTime * 0.5 + idx) * 0.025 * driftFactor;
 
-        // Depth-based scroll parallax (0.2x, 0.5x, 0.8x)
-        const parallaxY = (currentScroll * 0.0025) * cfg.parallaxDepth;
-        const parallaxRot = (currentScroll * 0.0004) * cfg.parallaxDepth;
+        // Depth-based scroll parallax & deterministic scroll-driven exit-and-return across simulator & lower sections
+        const maxDocScroll =
+          typeof document !== 'undefined'
+            ? Math.max(1200, document.documentElement.scrollHeight - window.innerHeight)
+            : 2400;
+        const scrollRatio = currentStage === 'simulator' && p >= 1 && !isReduced ? Math.min(1, currentScroll / maxDocScroll) : 0;
 
-        obj.position.set(posX + driftX, posY + driftY + parallaxY, posZ);
+        // Stage B/C: drift outward toward viewport edges as user scrolls through simulator (0.06 -> 0.45)
+        // Stage D: reanimate back into clear view during "Why it matters" before dark closing section (0.52 -> 0.78)
+        let scrollOffsetX = 0;
+        let scrollOffsetY = 0;
+        if (scrollRatio > 0.06) {
+          const exitT = Math.min(1, Math.max(0, (scrollRatio - 0.06) / 0.39));
+          const returnT = Math.min(1, Math.max(0, (scrollRatio - 0.52) / 0.26));
+          const outwardAmount = Math.sin(exitT * Math.PI * 0.5) * (1 - returnT * 0.96);
+          const dirX = cfg.simPos[0] >= 0 ? 1 : -1;
+          const dirY = cfg.simPos[1] >= 0 ? 1 : -1;
+          scrollOffsetX = dirX * outwardAmount * (3.6 + cfg.parallaxDepth * 1.4);
+          scrollOffsetY = dirY * outwardAmount * (1.2 + cfg.parallaxDepth * 0.8);
+        }
+
+        const parallaxY = (currentScroll * 0.0012) * cfg.parallaxDepth;
+        const parallaxRot = (currentScroll * 0.0005) * cfg.parallaxDepth;
+
+        obj.position.set(posX + driftX + scrollOffsetX, posY + driftY + parallaxY + scrollOffsetY, posZ);
         obj.rotation.set(rotX, rotY + parallaxRot, rotZ + driftRotZ);
         obj.scale.setScalar(scale * scaleBreath);
       });
@@ -484,24 +506,19 @@ export const Persistent3DTransition: React.FC<Persistent3DTransitionProps> = ({
     };
   }, [renderFailed]);
 
-  // In 'card' stage: Strictly clipped to the white card container (1024px max-width, 78vh max-580px centered)
-  // In 'simulator' stage: Positioned across the full simulator background behind UI panels
+  // In 'simulator' stage: Rendered at z-[1] above the #E9EEE5 simulator background and behind z-[10] cards
+  // During REVEALING_SIMULATOR (0 < scrollProgress < 1): z-[101] above the fading cream cover
   const isCardStage = stage === 'card';
+  const isRevealingSimulator = stage === 'simulator' && scrollProgress !== undefined && scrollProgress > 0 && scrollProgress < 1;
 
   return (
     <div
       className={`fixed inset-0 pointer-events-none select-none overflow-hidden ${
-        isCardStage ? 'flex items-center justify-center z-[115]' : 'z-0'
+        isCardStage ? 'z-[115]' : isRevealingSimulator ? 'z-[101]' : 'z-[1]'
       }`}
       aria-hidden="true"
     >
-      <div
-        className={
-          isCardStage
-            ? 'w-full max-w-4xl h-[78vh] max-h-[580px] mx-4 sm:mx-8 rounded-3xl overflow-hidden relative'
-            : 'w-full h-full relative'
-        }
-      >
+      <div className="w-full h-full relative">
         <canvas
           ref={canvasRef}
           className="w-full h-full block pointer-events-none"

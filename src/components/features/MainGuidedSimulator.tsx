@@ -255,30 +255,31 @@ export const MainGuidedSimulator: React.FC = () => {
 
       {/* Main 3-Column Simulator Layout (Sender | Delivery Server | Recipient) */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-stretch mb-8">
-        {/* LEFT COLUMN: Sender Device (Device A) */}
-        <div className="lg:col-span-4 rounded-3xl bg-white border-2 border-[#D3CDC2] p-5 sm:p-6 flex flex-col justify-between shadow-xs">
+        {/* LEFT COLUMN: Sender Device (Device A - Clean Green Fill) */}
+        <div className="lg:col-span-4 rounded-2xl bg-[#E3EDE3] border border-[#B8CBB0] p-5 sm:p-6 flex flex-col justify-between shadow-[0_6px_20px_rgba(21,58,50,0.06)]">
           <div>
-            <div className="flex items-center justify-between pb-3 border-b border-[#E3EDE3] mb-4">
+            <div className="flex items-center justify-between pb-3 border-b border-[#B8CBB0]/70 mb-4">
               <div>
                 <span className="text-xs font-bold uppercase tracking-wider text-[#176B50] block">
                   Sender
                 </span>
                 <input
                   type="text"
+                  aria-label="Sender device name"
                   value={senderLabel}
                   onChange={(e) => setSenderLabel(e.target.value)}
                   className="text-sm font-semibold text-[#153A32] bg-transparent border-b border-transparent hover:border-[#176B50] focus:border-[#176B50] focus:outline-none w-full max-w-[200px]"
                   title="Display name label (educational only)"
                 />
               </div>
-              <div className="w-8 h-8 rounded-full bg-[#E3EDE3] flex items-center justify-center text-[#176B50]">
+              <div className="w-8 h-8 rounded-full bg-[#FFFEF9] border border-[#B8CBB0] flex items-center justify-center text-[#176B50]">
                 <Lock size={16} />
               </div>
             </div>
 
             {/* Secret Key icon stays permanently inside endpoint */}
-            <div className="mb-4 px-3 py-2 rounded-xl bg-[#E3EDE3]/60 border border-[#D3CDC2]/60 flex items-center justify-between text-xs">
-              <span className="text-[#52665F] flex items-center gap-1.5">
+            <div className="mb-4 px-3 py-2 rounded-xl bg-[#FFFEF9]/85 border border-[#B8CBB0] flex items-center justify-between text-xs">
+              <span className="text-[#153A32] flex items-center gap-1.5 font-medium">
                 <Key size={14} className="text-[#A86B16]" />
                 Private Identity Key
               </span>
@@ -287,20 +288,30 @@ export const MainGuidedSimulator: React.FC = () => {
               </span>
             </div>
 
-            {/* Editable Message Input (Step 1) */}
-            <label className="text-xs font-semibold text-[#52665F] block mb-1">
+            {/* Editable Message Input (Step 1) with Green Fill & Homepage WhatsApp Doodle Wallpaper */}
+            <label htmlFor="sim-message-input" className="text-xs font-semibold text-[#153A32] block mb-1">
               Your message:
             </label>
-            <div className="relative">
+            <div className="relative rounded-xl border border-[#9EC098] bg-[#CFE3C9] overflow-hidden focus-within:border-[#176B50] focus-within:ring-2 focus-within:ring-[#176B50]/20 transition-all">
+              <div
+                className="absolute inset-0 pointer-events-none opacity-[0.16]"
+                style={{
+                  backgroundImage: 'url(/whatsapp-doodle.svg)',
+                  backgroundRepeat: 'repeat',
+                  backgroundSize: '340px auto',
+                }}
+                aria-hidden="true"
+              />
               <textarea
+                id="sim-message-input"
                 value={messageText}
                 onChange={(e) => handleMessageChange(e.target.value)}
                 maxLength={280}
                 rows={3}
                 placeholder="Type your message here..."
-                className="w-full p-3 rounded-xl border border-[#D3CDC2] bg-[#F7F4EC]/60 text-sm font-medium text-[#153A32] focus:border-[#176B50] focus:bg-white focus:outline-none transition-all resize-none"
+                className="relative z-10 w-full p-3 bg-transparent text-sm font-medium text-[#153A32] placeholder-[#52665F] focus:outline-none resize-none"
               />
-              <span className="text-[10px] text-[#869992] absolute bottom-2 right-2">
+              <span className="text-[10px] text-[#153A32]/70 font-medium absolute bottom-2 right-2 z-10 pointer-events-none">
                 {messageText.length}/280
               </span>
             </div>
@@ -331,8 +342,8 @@ export const MainGuidedSimulator: React.FC = () => {
           </div>
         </div>
 
-        {/* CENTER COLUMN: Insecure Relay / Delivery Server */}
-        <div className="lg:col-span-4 rounded-3xl bg-[#E3EDE3]/40 border-2 border-dashed border-[#2E638F]/40 p-5 sm:p-6 flex flex-col justify-between shadow-xs">
+        {/* CENTER COLUMN: Insecure Relay / Delivery Server (White Fill) */}
+        <div className="lg:col-span-4 rounded-2xl bg-white border border-[#D3DBCF] p-5 sm:p-6 flex flex-col justify-between shadow-[0_6px_20px_rgba(21,58,50,0.05)]">
           <div>
             <div className="flex items-center justify-between pb-3 border-b border-[#2E638F]/20 mb-4">
               <div>
@@ -415,30 +426,31 @@ export const MainGuidedSimulator: React.FC = () => {
           </div>
         </div>
 
-        {/* RIGHT COLUMN: Recipient Device (Device B) */}
-        <div className="lg:col-span-4 rounded-3xl bg-white border-2 border-[#D3CDC2] p-5 sm:p-6 flex flex-col justify-between shadow-xs">
+        {/* RIGHT COLUMN: Recipient Device (Device B - Clean Green Fill) */}
+        <div className="lg:col-span-4 rounded-2xl bg-[#E3EDE3] border border-[#B8CBB0] p-5 sm:p-6 flex flex-col justify-between shadow-[0_6px_20px_rgba(21,58,50,0.06)]">
           <div>
-            <div className="flex items-center justify-between pb-3 border-b border-[#E3EDE3] mb-4">
+            <div className="flex items-center justify-between pb-3 border-b border-[#B8CBB0]/70 mb-4">
               <div>
                 <span className="text-xs font-bold uppercase tracking-wider text-[#176B50] block">
                   Recipient
                 </span>
                 <input
                   type="text"
+                  aria-label="Recipient device name"
                   value={recipientLabel}
                   onChange={(e) => setRecipientLabel(e.target.value)}
                   className="text-sm font-semibold text-[#153A32] bg-transparent border-b border-transparent hover:border-[#176B50] focus:border-[#176B50] focus:outline-none w-full max-w-[200px]"
                   title="Display name label (educational only)"
                 />
               </div>
-              <div className="w-8 h-8 rounded-full bg-[#E3EDE3] flex items-center justify-center text-[#176B50]">
+              <div className="w-8 h-8 rounded-full bg-[#FFFEF9] border border-[#B8CBB0] flex items-center justify-center text-[#176B50]">
                 <Unlock size={16} />
               </div>
             </div>
 
             {/* Secret Key icon stays permanently inside endpoint */}
-            <div className="mb-4 px-3 py-2 rounded-xl bg-[#E3EDE3]/60 border border-[#D3CDC2]/60 flex items-center justify-between text-xs">
-              <span className="text-[#52665F] flex items-center gap-1.5">
+            <div className="mb-4 px-3 py-2 rounded-xl bg-[#FFFEF9]/85 border border-[#B8CBB0] flex items-center justify-between text-xs">
+              <span className="text-[#153A32] flex items-center gap-1.5 font-medium">
                 <Key size={14} className="text-[#A86B16]" />
                 Private Identity Key
               </span>
@@ -448,12 +460,12 @@ export const MainGuidedSimulator: React.FC = () => {
             </div>
 
             {/* Received Message State */}
-            <label className="text-xs font-semibold text-[#52665F] block mb-1">
+            <label className="text-xs font-semibold text-[#153A32] block mb-1">
               Received readable message:
             </label>
 
             {currentStep < 3 && (
-              <div className="p-6 rounded-xl border border-dashed border-[#D3CDC2] bg-[#F7F4EC]/40 text-center text-xs text-[#869992] italic">
+              <div className="p-6 rounded-xl border border-dashed border-[#9EC098] bg-[#CFE3C9]/65 text-center text-xs text-[#52665F] italic">
                 Awaiting delivery and decryption...
               </div>
             )}
