@@ -1,3 +1,16 @@
+<<<<<<< HEAD
 ﻿node_modules/
 node_modules/
 Global-Virtual-Hackathon-repo/
+=======
+node_modules
+.DS_Store
+dist
+dist-ssr
+*.local
+.vite
+>>>>>>> 6999489431c6b7869342eb0fab787c015b61a35b
+node_modules
+node_modules
+node_modules
+node_modules/
