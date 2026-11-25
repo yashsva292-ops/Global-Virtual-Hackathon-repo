@@ -281,46 +281,16 @@ export const App: React.FC = () => {
               &larr; Back to Home
             </button>
 
-            <button
-              onClick={() => setCurrentView('simulator')}
-              className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-[#176B50] hover:bg-[#153A32] text-white text-xs sm:text-sm font-semibold transition-all cursor-pointer shadow-md hover:shadow-lg active:scale-98"
-            >
-              <span>Explore Cryptography Lab</span>
-              &rarr;
-            </button>
+
           </div>
 
           {/* E2EE Phones & Scrambled Encryption Animation Section */}
           <div className="relative z-10 max-w-6xl mx-auto rounded-3xl bg-[#F7F4EC] border border-[#D3CDC2] shadow-sm overflow-hidden mb-12">
-            <InteractiveE2EEJourney onExploreMore={() => setCurrentView('simulator')} />
-          </div>
-        </motion.div>
-      )}
-
-      {/* STAGE 2: Deep Dive Technical Guided Lab (Opened when user chooses to advance) */}
-      {currentView === 'simulator' && (
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
-          className="relative w-full min-h-screen bg-[#E9EEE5] py-8 px-4 sm:px-8 overflow-hidden"
-        >
-          <div className="relative z-10 max-w-6xl mx-auto mb-6 flex items-center justify-between">
-            <button
-              onClick={() => setCurrentView('phonesim')}
-              className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-[#D3CDC2] bg-white text-[#153A32] text-xs font-semibold hover:bg-[#E3EDE3] transition-colors cursor-pointer shadow-xs"
-            >
-              &larr; Back to Phone Simulator
-            </button>
-            <button
-              onClick={() => setCurrentView('home')}
-              className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-[#D3CDC2] bg-white text-[#153A32] text-xs font-semibold hover:bg-[#E3EDE3] transition-colors cursor-pointer shadow-xs"
-            >
-              Home
-            </button>
+            <InteractiveE2EEJourney />
           </div>
 
-          <div className="relative z-10">
+          {/* Cryptography Lab directly below the animation */}
+          <div className="relative z-10 max-w-6xl mx-auto mb-16">
             <MainGuidedSimulator />
           </div>
         </motion.div>

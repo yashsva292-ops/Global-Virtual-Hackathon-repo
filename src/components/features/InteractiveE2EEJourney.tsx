@@ -396,9 +396,9 @@ export const InteractiveE2EEJourney: React.FC<InteractiveE2EEJourneyProps> = ({ 
         )}
       </AnimatePresence>
 
-      {/* Bottom Replay & Explore Action Bar */}
-      <div className="relative z-20 flex flex-wrap items-center justify-center gap-4 mt-8 pb-4">
-        {journeyState === 'delivered' && (
+      {/* Bottom Replay Action Bar */}
+      {journeyState === 'delivered' && (
+        <div className="relative z-20 flex flex-wrap items-center justify-center gap-4 mt-8 pb-4">
           <motion.button
             initial={{ opacity: 0, scale: 0.9 }}
             animate={{ opacity: 1, scale: 1 }}
@@ -408,18 +408,8 @@ export const InteractiveE2EEJourney: React.FC<InteractiveE2EEJourneyProps> = ({ 
             <RefreshCw className="w-4 h-4" />
             <span>Send Another Secret Message</span>
           </motion.button>
-        )}
-
-        {onExploreMore && (
-          <button
-            onClick={onExploreMore}
-            className="flex items-center gap-2 px-5 py-2.5 rounded-full bg-white/90 hover:bg-white border border-[#d1d7db] text-[#111b21] font-medium text-xs sm:text-sm shadow-xs transition-all cursor-pointer group hover:border-[#00a884]"
-          >
-            <span>Dive Deeper: Technical Cryptography Lab</span>
-            <ArrowRight className="w-4 h-4 text-[#00a884] group-hover:translate-x-1 transition-transform" />
-          </button>
-        )}
-      </div>
+        </div>
+      )}
     </div>
   );
 };
