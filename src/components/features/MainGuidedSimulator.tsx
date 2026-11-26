@@ -491,7 +491,7 @@ export const MainGuidedSimulator: React.FC = () => {
                     }}
                     aria-hidden="true"
                   />
-                  <span className="relative z-10">"{decryptionResult.plaintext}"</span>
+                  <span className="relative z-10">{decryptionResult.plaintext}</span>
                 </div>
                 <span className="text-[10px] text-[#52665F] mt-2 block font-mono">
                   AES-GCM tag verified: matching message key confirmed.
