@@ -320,27 +320,49 @@ export const E2EEHomePage: React.FC<E2EEHomePageProps> = ({ onNavigateToSimulato
                 />
                 <span className="relative z-10 inline-flex items-center gap-2">
                   <span>See you tomorrow?</span>
-                  <motion.span
-                    initial={false}
-                    animate={
-                      reducedMotion
-                        ? { opacity: 1, scale: 1 }
-                        : journeyPhase === 'animating'
-                        ? { opacity: [0, 0, 1, 1], scale: [0.85, 0.85, 1, 1] }
-                        : { opacity: 0 }
-                    }
-                    transition={{
-                      duration: 7.5,
-                      times: [0, 0.61, 0.67, 1],
-                    }}
-                    className="inline-flex items-center shrink-0 text-[#53BDEB]"
-                    aria-label="Read"
-                  >
-                    <svg width="14" height="10" viewBox="0 0 18 11" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-                      <path d="M1.5 5.8L4.8 9.2L11.5 1.8" />
-                      <path d="M6.5 5.8L9.8 9.2L16.5 1.8" />
+                  {/* Authentic WhatsApp blue ticks on Meera's bubble: first tick then second tick */}
+                  <span className="inline-flex items-center shrink-0" aria-label="Read">
+                    <svg width="14" height="10" viewBox="0 0 18 11" fill="none" aria-hidden="true">
+                      <motion.path
+                        d="M1.5 5.8L4.8 9.2L11.5 1.8"
+                        stroke="#53BDEB"
+                        strokeWidth="1.8"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        initial={false}
+                        animate={
+                          reducedMotion
+                            ? { opacity: 1 }
+                            : journeyPhase === 'animating'
+                            ? { opacity: [0, 0, 1, 1] }
+                            : { opacity: 0 }
+                        }
+                        transition={{
+                          duration: 7.5,
+                          times: [0, 0.64, 0.69, 1],
+                        }}
+                      />
+                      <motion.path
+                        d="M6.5 5.8L9.8 9.2L16.5 1.8"
+                        stroke="#53BDEB"
+                        strokeWidth="1.8"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        initial={false}
+                        animate={
+                          reducedMotion
+                            ? { opacity: 1 }
+                            : journeyPhase === 'animating'
+                            ? { opacity: [0, 0, 1, 1] }
+                            : { opacity: 0 }
+                        }
+                        transition={{
+                          duration: 7.5,
+                          times: [0, 0.72, 0.77, 1],
+                        }}
+                      />
                     </svg>
-                  </motion.span>
+                  </span>
                 </span>
                 {/* BlockReveal wipe overlay on Meera's pop-up entry and exit */}
                 {!reducedMotion && (
