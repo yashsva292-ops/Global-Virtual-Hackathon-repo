@@ -577,7 +577,7 @@ export const WordsPreloader: React.FC<WordsPreloaderProps> = ({
       setIsLoaded(false);
       setIsEntranceComplete(false);
     }
-  }, [phase, isEntranceComplete, isInteractiveScroll]);
+  }, [phase, isEntranceComplete]);
 
   // Normalized coordinates in 1000x1000 viewBox:
   // Button origin (bx, by) defaults to bottom-right hotline zone (~860, 920)

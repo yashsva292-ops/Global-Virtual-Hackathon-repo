@@ -118,10 +118,10 @@ export const E2EEHomePage: React.FC<E2EEHomePageProps> = ({ onNavigateToSimulato
           - Right Character (Meera): ~22–25% width
           Framing the central title seamlessly without overlapping text.
         */}
-        <div className="relative w-full flex-1 flex flex-col lg:flex-row items-center justify-between gap-6 my-auto">
+        <div className="relative w-full flex-1 flex flex-col lg:grid lg:grid-cols-[minmax(180px,1fr)_auto_minmax(180px,1fr)] items-center justify-items-center gap-6 lg:gap-8 my-auto">
           {/* LEFT: Aarav (Proportioned Editorial Illustration, Holding Phone) */}
-          <div className="w-full lg:w-[22%] flex flex-col items-center lg:items-end justify-center relative order-2 lg:order-1 pt-8 lg:pt-0">
-            <div className="relative w-[175px] sm:w-[210px] md:w-[230px] lg:w-[240px] flex flex-col items-center">
+          <div className="w-full flex flex-col items-center lg:items-end justify-center relative order-2 lg:order-1 pt-8 lg:pt-0">
+            <div className="relative w-[175px] sm:w-[210px] md:w-[225px] lg:w-[235px] flex flex-col items-center">
               {/* Sent Speech Bubble */}
               <motion.div
                 initial={false}
@@ -156,7 +156,7 @@ export const E2EEHomePage: React.FC<E2EEHomePageProps> = ({ onNavigateToSimulato
           </div>
 
           {/* CENTER: Focused Typography Zone with Exceptional Editorial Hierarchy */}
-          <div className="w-full lg:w-[56%] flex flex-col items-center text-center px-2 sm:px-6 z-20 order-1 lg:order-2">
+          <div className="w-full max-w-2xl flex flex-col items-center text-center px-2 sm:px-4 z-20 order-1 lg:order-2">
             {/* The Syntax Unveilers present - Refined Secondary Kicker */}
             <p className="text-[11px] sm:text-xs font-semibold tracking-[0.22em] uppercase text-[#176B50]/85 mb-3 sm:mb-4 select-none">
               The Syntax Unveilers present
@@ -198,8 +198,8 @@ export const E2EEHomePage: React.FC<E2EEHomePageProps> = ({ onNavigateToSimulato
           </div>
 
           {/* RIGHT: Meera (Proportioned Editorial Illustration, Holding Phone) */}
-          <div className="w-full lg:w-[22%] flex flex-col items-center lg:items-start justify-center relative order-3 pt-8 lg:pt-0">
-            <div className="relative w-[175px] sm:w-[210px] md:w-[230px] lg:w-[240px] flex flex-col items-center">
+          <div className="w-full flex flex-col items-center lg:items-start justify-center relative order-3 pt-8 lg:pt-0">
+            <div className="relative w-[175px] sm:w-[210px] md:w-[225px] lg:w-[235px] flex flex-col items-center">
               {/* Received Speech Bubble: Decrypts when packet arrives */}
               <motion.div
                 initial={false}

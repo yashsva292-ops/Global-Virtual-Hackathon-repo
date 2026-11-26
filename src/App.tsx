@@ -100,7 +100,7 @@ export const App: React.FC = () => {
     if (!hasVisited || appState !== 'HOME') return;
 
     let accumulatedScroll = 0;
-    const maxScrollDistance = 450;
+    const maxScrollDistance = 260;
     let retractTimer: ReturnType<typeof setTimeout> | null = null;
     let retractAnimFrame: number | null = null;
 
@@ -128,7 +128,7 @@ export const App: React.FC = () => {
       if (retractAnimFrame) cancelAnimationFrame(retractAnimFrame);
       retractTimer = setTimeout(() => {
         smoothlyRetract();
-      }, 350);
+      }, 650);
     };
 
     const handleWheel = (e: WheelEvent) => {
@@ -146,6 +146,7 @@ export const App: React.FC = () => {
 
       if (fraction >= 0.50) {
         transitionActiveRef.current = true;
+        setIsInteractiveScroll(false);
         setTriggerType('scroll');
         setScrollFraction(1);
         setAppState('ENTERING_LOADER');
@@ -176,6 +177,7 @@ export const App: React.FC = () => {
 
       if (fraction >= 0.50) {
         transitionActiveRef.current = true;
+        setIsInteractiveScroll(false);
         setTriggerType('scroll');
         setScrollFraction(1);
         setAppState('ENTERING_LOADER');
