@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 import {
   generateEndpointKeyPair,
   deriveSymmetricMessageKey,
@@ -133,28 +134,49 @@ export const WhyPrivacyMattersStory: React.FC = () => {
               id="story-window"
               aria-live="polite"
             >
-              {storyMode === 'friend' ? (
-                <>
-                  <span className="small">AARAV &amp; MEERA</span>
-                  <div className="story-bubble sent">{STORY_TEXTS[0]}</div>
-                  <div className="story-bubble reply">{STORY_TEXTS[1]}</div>
-                  <span className="story-delivery">A private moment, delivered.</span>
-                </>
-              ) : (
-                <>
-                  <span className="small">THE RELAY’S VIEW</span>
-                  <div className="story-cipher">
-                    {storyCiphers
-                      ? storyCiphers.join('\n\n')
-                      : storyError
-                      ? 'Encryption is unavailable in this browser.'
-                      : 'Preparing this example’s encrypted packet…'}
-                  </div>
-                  <p>
-                    Visible: the endpoints, message numbers and packet sizes. The conversation’s contents remain encrypted.
-                  </p>
-                </>
-              )}
+              <div
+                className={`story-doodles${storyMode === 'relay' ? ' is-relay' : ''}`}
+                aria-hidden="true"
+                style={{ backgroundImage: 'url(./whatsapp-doodle.svg)' }}
+              />
+              <AnimatePresence mode="wait">
+                {storyMode === 'friend' ? (
+                  <motion.div
+                    key="friend"
+                    initial={{ opacity: 0, y: 8 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -8 }}
+                    transition={{ duration: 0.28, ease: [0.22, 1, 0.36, 1] }}
+                    className="story-window-inner"
+                  >
+                    <span className="small">AARAV &amp; MEERA</span>
+                    <div className="story-bubble sent">{STORY_TEXTS[0]}</div>
+                    <div className="story-bubble reply">{STORY_TEXTS[1]}</div>
+                    <span className="story-delivery">A private moment, delivered.</span>
+                  </motion.div>
+                ) : (
+                  <motion.div
+                    key="relay"
+                    initial={{ opacity: 0, y: 8 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -8 }}
+                    transition={{ duration: 0.28, ease: [0.22, 1, 0.36, 1] }}
+                    className="story-window-inner"
+                  >
+                    <span className="small">THE RELAY’S VIEW</span>
+                    <div className="story-cipher">
+                      {storyCiphers
+                        ? storyCiphers.join('\n\n')
+                        : storyError
+                        ? 'Encryption is unavailable in this browser.'
+                        : 'Preparing this example’s encrypted packet…'}
+                    </div>
+                    <p>
+                      Visible: the endpoints, message numbers and packet sizes. The conversation’s contents remain encrypted.
+                    </p>
+                  </motion.div>
+                )}
+              </AnimatePresence>
             </div>
 
             <div className="privacy-question">

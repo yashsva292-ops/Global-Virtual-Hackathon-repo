@@ -44,8 +44,8 @@ interface ShapeDef {
  * - Central hollow rounded diamond aperture with inner mint glow.
  */
 function createDesignBOrganicMesh(sharedMaterial: THREE.Material): THREE.Mesh {
-  const res = 72;
-  const mc = new MarchingCubes(res, sharedMaterial, true, true);
+  const res = 96;
+  const mc = new MarchingCubes(res, sharedMaterial, false, false);
   mc.isolation = 75;
   mc.reset();
 
@@ -394,13 +394,16 @@ export const Persistent3DTransition: React.FC<Persistent3DTransitionProps> = ({
     let animationFrameId: number;
     let isTabHidden = document.hidden;
     const clock = new THREE.Clock();
+    let smoothedScroll = scrollYRef.current;
 
     const renderLoop = () => {
       if (isTabHidden) return;
 
       const elapsedTime = clock.getElapsedTime();
       const isReduced = reducedMotionRef.current;
-      const currentScroll = isReduced ? 0 : scrollYRef.current;
+      const targetScroll = isReduced ? 0 : scrollYRef.current;
+      smoothedScroll += (targetScroll - smoothedScroll) * 0.12;
+      const currentScroll = isReduced ? 0 : smoothedScroll;
       const p = scrollProgressRef.current;
       const currentStage = stageRef.current;
 

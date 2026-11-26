@@ -15,7 +15,7 @@ export const FuturePrivacySection: React.FC = () => {
                 Still private tomorrow?
               </h2>
               <p className="future-intro">
-                Tomorrow’s match may matter for a day. A medical report or a personal conversation may need to stay private for years.
+                Tomorrow’s match may matter for a day, but a medical report, secret documents, and private conversations may need to stay private for years.
               </p>
             </header>
 
@@ -119,31 +119,6 @@ export const FuturePrivacySection: React.FC = () => {
                 <p className="future-panel-clarification">It does not make stored messages disappear.</p>
               </div>
             </div>
-
-            <footer className="future-footer">
-              <p className="future-takeaway">
-                The challenge is protecting a message for as long as its privacy matters.
-              </p>
-              <p className="future-model-note">
-                This simulator demonstrates conventional cryptography. It does not implement post-quantum protection or quantum key distribution.
-              </p>
-              <div className="future-sources">
-                <a
-                  href="https://www.nist.gov/cybersecurity-and-privacy/what-post-quantum-cryptography"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  Post-quantum cryptography — NIST
-                </a>
-                <a
-                  href="https://www.nist.gov/cybersecurity-and-privacy/what-quantum-cryptography"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  Quantum key distribution — NIST
-                </a>
-              </div>
-            </footer>
           </div>
         </div>
       </section>
