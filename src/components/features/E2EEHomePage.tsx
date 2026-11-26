@@ -35,12 +35,12 @@ export const E2EEHomePage: React.FC<E2EEHomePageProps> = ({ onNavigateToSimulato
     runCryptoJourney();
   }, []);
 
-  // Journey animation loop: 7.5s total cycle (3s Aarav steady -> Delivered slide -> BlockReveal wipe handoff to Meera)
+  // Journey animation loop: 11.0s total cycle (Aarav +2s -> Meera +2s -> 4s gap)
   useEffect(() => {
     if (reducedMotion || isPaused) return;
 
     setJourneyPhase('animating');
-    const cycleTime = 7500;
+    const cycleTime = 11000;
 
     const interval = setInterval(() => {
       runCryptoJourney();
@@ -141,8 +141,8 @@ export const E2EEHomePage: React.FC<E2EEHomePageProps> = ({ onNavigateToSimulato
                     : { clipPath: 'inset(0 100% 0 0)' }
                 }
                 transition={{
-                  duration: 7.5,
-                  times: [0, 0.06, 0.56, 0.62, 1],
+                  duration: 11,
+                  times: [0, 0.045, 0.29, 0.34, 1],
                   ease: [0.22, 1, 0.36, 1],
                 }}
                 className="mb-2.5 sm:mb-0 sm:absolute sm:-top-11 sm:left-2 z-20 relative overflow-hidden bg-[#CFE3C9] border border-[#9EC098] text-[#153A32] text-sm sm:text-[15px] font-semibold px-4 py-2 rounded-t-2xl rounded-br-2xl shadow-[0_6px_16px_rgba(21,58,50,0.08)] whitespace-nowrap"
@@ -176,8 +176,8 @@ export const E2EEHomePage: React.FC<E2EEHomePageProps> = ({ onNavigateToSimulato
                             : { opacity: 0 }
                         }
                         transition={{
-                          duration: 7.5,
-                          times: [0, 0.16, 0.22, 0.42, 1],
+                          duration: 11,
+                          times: [0, 0.055, 0.08, 0.29, 1],
                         }}
                       />
                       <motion.path
@@ -195,25 +195,25 @@ export const E2EEHomePage: React.FC<E2EEHomePageProps> = ({ onNavigateToSimulato
                             : { opacity: 0 }
                         }
                         transition={{
-                          duration: 7.5,
-                          times: [0, 0.24, 0.30, 1],
+                          duration: 11,
+                          times: [0, 0.085, 0.11, 1],
                         }}
                       />
                     </svg>
                   </span>
                 </span>
-                {/* BlockReveal wipe overlay when Aarav's pop-up exits */}
+                {/* BlockReveal wipe overlay on Aarav's pop-up entry and exit */}
                 {!reducedMotion && (
                   <motion.div
                     initial={false}
                     animate={
                       journeyPhase === 'animating'
-                        ? { scaleX: [0, 0, 1, 1, 0], originX: [0, 0, 0, 1, 1] }
+                        ? { scaleX: [0, 1, 0, 0, 1, 1, 0], originX: [0, 0, 1, 0, 0, 1, 1] }
                         : { scaleX: 0 }
                     }
                     transition={{
-                      duration: 7.5,
-                      times: [0, 0.53, 0.56, 0.62, 0.64],
+                      duration: 11,
+                      times: [0, 0.025, 0.05, 0.28, 0.30, 0.34, 0.36],
                       ease: [0.22, 1, 0.36, 1],
                     }}
                     className="absolute inset-0 z-20 bg-[#176B50] pointer-events-none"
@@ -303,8 +303,8 @@ export const E2EEHomePage: React.FC<E2EEHomePageProps> = ({ onNavigateToSimulato
                     : { clipPath: 'inset(0 100% 0 0)' }
                 }
                 transition={{
-                  duration: 7.5,
-                  times: [0, 0.56, 0.62, 0.93, 0.99],
+                  duration: 11,
+                  times: [0, 0.30, 0.35, 0.59, 0.64],
                   ease: [0.22, 1, 0.36, 1],
                 }}
                 className="mb-2.5 sm:mb-0 sm:absolute sm:-top-11 sm:right-2 z-20 relative overflow-hidden bg-[#CFE3C9] border border-[#9EC098] text-[#153A32] text-sm sm:text-[15px] font-semibold px-4 py-2 rounded-t-2xl rounded-bl-2xl shadow-[0_6px_16px_rgba(21,58,50,0.08)] whitespace-nowrap"
@@ -338,8 +338,8 @@ export const E2EEHomePage: React.FC<E2EEHomePageProps> = ({ onNavigateToSimulato
                             : { opacity: 0 }
                         }
                         transition={{
-                          duration: 7.5,
-                          times: [0, 0.64, 0.69, 1],
+                          duration: 11,
+                          times: [0, 0.355, 0.38, 1],
                         }}
                       />
                       <motion.path
@@ -357,8 +357,8 @@ export const E2EEHomePage: React.FC<E2EEHomePageProps> = ({ onNavigateToSimulato
                             : { opacity: 0 }
                         }
                         transition={{
-                          duration: 7.5,
-                          times: [0, 0.72, 0.77, 1],
+                          duration: 11,
+                          times: [0, 0.385, 0.41, 1],
                         }}
                       />
                     </svg>
@@ -374,8 +374,8 @@ export const E2EEHomePage: React.FC<E2EEHomePageProps> = ({ onNavigateToSimulato
                         : { scaleX: 0 }
                     }
                     transition={{
-                      duration: 7.5,
-                      times: [0, 0.56, 0.60, 0.65, 0.92, 0.96, 1],
+                      duration: 11,
+                      times: [0, 0.30, 0.33, 0.36, 0.58, 0.61, 0.65],
                       ease: [0.22, 1, 0.36, 1],
                     }}
                     className="absolute inset-0 z-20 bg-[#176B50] pointer-events-none"
