@@ -147,8 +147,8 @@ export const E2EEHomePage: React.FC<E2EEHomePageProps> = ({ onNavigateToSimulato
                 initial={false}
                 animate={
                   reducedMotion || bubbleStage === 'aarav'
-                    ? { clipPath: 'inset(0 0% 0 0)', opacity: 1 }
-                    : { clipPath: 'inset(0 0% 0 100%)', opacity: 0 }
+                    ? { clipPath: 'inset(0 0% 0 0)' }
+                    : { clipPath: 'inset(0 0% 0 100%)' }
                 }
                 transition={{
                   duration: 0.42,
@@ -273,8 +273,8 @@ export const E2EEHomePage: React.FC<E2EEHomePageProps> = ({ onNavigateToSimulato
                 initial={false}
                 animate={
                   reducedMotion || bubbleStage === 'meera'
-                    ? { clipPath: 'inset(0 0% 0 0)', opacity: 1 }
-                    : { clipPath: 'inset(0 0% 0 100%)', opacity: 0 }
+                    ? { clipPath: 'inset(0 0% 0 0)' }
+                    : { clipPath: 'inset(0 0% 0 100%)' }
                 }
                 transition={{
                   duration: 0.42,
