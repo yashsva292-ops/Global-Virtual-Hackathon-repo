@@ -8,6 +8,22 @@ export type WordPreloaderPhase = 'idle' | 'expanding' | 'loading' | 'exiting';
 // Shared Web Audio typewriter tick synthesizer for loading digit changes
 let sharedAudioCtx: AudioContext | null = null;
 
+export function unlockLoadingAudio() {
+  if (typeof window === 'undefined') return;
+  try {
+    const AudioCtx = window.AudioContext || (window as unknown as { webkitAudioContext: typeof AudioContext }).webkitAudioContext;
+    if (!AudioCtx) return;
+    if (!sharedAudioCtx) {
+      sharedAudioCtx = new AudioCtx();
+    }
+    if (sharedAudioCtx.state === 'suspended') {
+      sharedAudioCtx.resume().catch(() => {});
+    }
+  } catch {
+    // Ignore
+  }
+}
+
 function playTypewriterTick(isComplete = false) {
   if (typeof window === 'undefined') return;
   try {
@@ -24,11 +40,11 @@ function playTypewriterTick(isComplete = false) {
     const now = sharedAudioCtx.currentTime;
 
     // Crisp mechanical key click (short filtered noise burst)
-    const bufferSize = Math.floor(sharedAudioCtx.sampleRate * 0.018);
+    const bufferSize = Math.floor(sharedAudioCtx.sampleRate * 0.028);
     const buffer = sharedAudioCtx.createBuffer(1, bufferSize, sharedAudioCtx.sampleRate);
     const data = buffer.getChannelData(0);
     for (let i = 0; i < bufferSize; i++) {
-      data[i] = (Math.random() * 2 - 1) * Math.exp(-i / (bufferSize * 0.25));
+      data[i] = (Math.random() * 2 - 1) * Math.exp(-i / (bufferSize * 0.28));
     }
 
     const noise = sharedAudioCtx.createBufferSource();
@@ -36,31 +52,31 @@ function playTypewriterTick(isComplete = false) {
 
     const filter = sharedAudioCtx.createBiquadFilter();
     filter.type = 'bandpass';
-    filter.frequency.setValueAtTime(isComplete ? 2400 : 1850 + Math.random() * 350, now);
-    filter.Q.setValueAtTime(1.8, now);
+    filter.frequency.setValueAtTime(isComplete ? 2400 : 1750 + Math.random() * 350, now);
+    filter.Q.setValueAtTime(1.4, now);
 
     const gain = sharedAudioCtx.createGain();
-    gain.gain.setValueAtTime(isComplete ? 0.09 : 0.055, now);
-    gain.gain.exponentialRampToValueAtTime(0.001, now + 0.022);
+    gain.gain.setValueAtTime(isComplete ? 0.32 : 0.22, now);
+    gain.gain.exponentialRampToValueAtTime(0.001, now + 0.03);
 
     noise.connect(filter);
     filter.connect(gain);
     gain.connect(sharedAudioCtx.destination);
     noise.start(now);
 
-    // Subtle mechanical body thud
+    // Tactile mechanical body thump
     const osc = sharedAudioCtx.createOscillator();
     const oscGain = sharedAudioCtx.createGain();
     osc.type = 'triangle';
-    osc.frequency.setValueAtTime(isComplete ? 520 : 165 + Math.random() * 25, now);
-    osc.frequency.exponentialRampToValueAtTime(isComplete ? 880 : 75, now + 0.025);
-    oscGain.gain.setValueAtTime(isComplete ? 0.06 : 0.03, now);
-    oscGain.gain.exponentialRampToValueAtTime(0.001, now + 0.028);
+    osc.frequency.setValueAtTime(isComplete ? 540 : 185 + Math.random() * 30, now);
+    osc.frequency.exponentialRampToValueAtTime(isComplete ? 920 : 80, now + 0.032);
+    oscGain.gain.setValueAtTime(isComplete ? 0.2 : 0.12, now);
+    oscGain.gain.exponentialRampToValueAtTime(0.001, now + 0.035);
 
     osc.connect(oscGain);
     oscGain.connect(sharedAudioCtx.destination);
     osc.start(now);
-    osc.stop(now + 0.03);
+    osc.stop(now + 0.038);
   } catch {
     // Ignore audio errors if blocked by browser autoplay policy
   }

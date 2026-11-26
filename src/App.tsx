@@ -8,7 +8,7 @@ import { DeeperExplorationSection } from './components/features/DeeperExploratio
 import { WhyPrivacyMattersStory } from './components/features/WhyPrivacyMattersStory';
 import { ClosingSectionAndFooter } from './components/features/ClosingSectionAndFooter';
 import { GreetingPreloader } from './components/GreetingPreloader';
-import { WordsPreloader, type WordPreloaderPhase } from './components/WordsPreloader';
+import { WordsPreloader, unlockLoadingAudio, type WordPreloaderPhase } from './components/WordsPreloader';
 import { Persistent3DTransition } from './components/features/Persistent3DTransition';
 import { MOTION_CONFIG, prefersReducedMotion } from './motion.config';
 
@@ -73,6 +73,7 @@ export const App: React.FC = () => {
 
   // 1. User clicks the primary button on HomePage -> instant transition cover
   const handleStartDeepDive = (origin?: { x: number; y: number }) => {
+    unlockLoadingAudio();
     if (appState !== 'HOME' || transitionActiveRef.current) return;
     transitionActiveRef.current = true;
 
@@ -130,6 +131,7 @@ export const App: React.FC = () => {
     };
 
     const handleWheel = (e: WheelEvent) => {
+      unlockLoadingAudio();
       if (appState !== 'HOME' || transitionActiveRef.current) return;
       if (retractTimer) clearTimeout(retractTimer);
       if (retractAnimFrame) cancelAnimationFrame(retractAnimFrame);
@@ -154,6 +156,7 @@ export const App: React.FC = () => {
 
     let touchStartY = 0;
     const handleTouchStart = (e: TouchEvent) => {
+      unlockLoadingAudio();
       if (retractTimer) clearTimeout(retractTimer);
       if (retractAnimFrame) cancelAnimationFrame(retractAnimFrame);
       touchStartY = e.touches[0].clientY;
