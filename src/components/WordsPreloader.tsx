@@ -16,12 +16,70 @@ export function unlockLoadingAudio() {
     if (!sharedAudioCtx) {
       sharedAudioCtx = new AudioCtx();
     }
-    if (sharedAudioCtx.state === 'suspended') {
+    if (sharedAudioCtx.state !== 'running') {
       sharedAudioCtx.resume().catch(() => {});
     }
   } catch {
     // Ignore
   }
+}
+
+// Automatically unlock AudioContext on the earliest user gesture anywhere on the page
+if (typeof window !== 'undefined') {
+  const gestureUnlock = () => {
+    unlockLoadingAudio();
+    if (sharedAudioCtx?.state === 'running') {
+      window.removeEventListener('pointerdown', gestureUnlock);
+      window.removeEventListener('keydown', gestureUnlock);
+      window.removeEventListener('touchstart', gestureUnlock);
+    }
+  };
+  window.addEventListener('pointerdown', gestureUnlock, { passive: true });
+  window.addEventListener('keydown', gestureUnlock, { passive: true });
+  window.addEventListener('touchstart', gestureUnlock, { passive: true });
+}
+
+function triggerTickNodes(ctx: AudioContext, isComplete: boolean) {
+  const now = ctx.currentTime;
+
+  // Crisp mechanical key click (short filtered noise burst)
+  const bufferSize = Math.floor(ctx.sampleRate * 0.028);
+  const buffer = ctx.createBuffer(1, bufferSize, ctx.sampleRate);
+  const data = buffer.getChannelData(0);
+  for (let i = 0; i < bufferSize; i++) {
+    data[i] = (Math.random() * 2 - 1) * Math.exp(-i / (bufferSize * 0.28));
+  }
+
+  const noise = ctx.createBufferSource();
+  noise.buffer = buffer;
+
+  const filter = ctx.createBiquadFilter();
+  filter.type = 'bandpass';
+  filter.frequency.setValueAtTime(isComplete ? 2400 : 1750 + Math.random() * 350, now);
+  filter.Q.setValueAtTime(1.4, now);
+
+  const gain = ctx.createGain();
+  gain.gain.setValueAtTime(isComplete ? 0.32 : 0.22, now);
+  gain.gain.exponentialRampToValueAtTime(0.001, now + 0.03);
+
+  noise.connect(filter);
+  filter.connect(gain);
+  gain.connect(ctx.destination);
+  noise.start(now);
+
+  // Tactile mechanical body thump
+  const osc = ctx.createOscillator();
+  const oscGain = ctx.createGain();
+  osc.type = 'triangle';
+  osc.frequency.setValueAtTime(isComplete ? 540 : 185 + Math.random() * 30, now);
+  osc.frequency.exponentialRampToValueAtTime(isComplete ? 920 : 80, now + 0.032);
+  oscGain.gain.setValueAtTime(isComplete ? 0.2 : 0.12, now);
+  oscGain.gain.exponentialRampToValueAtTime(0.001, now + 0.035);
+
+  osc.connect(oscGain);
+  oscGain.connect(ctx.destination);
+  osc.start(now);
+  osc.stop(now + 0.038);
 }
 
 function playTypewriterTick(isComplete = false) {
@@ -33,50 +91,15 @@ function playTypewriterTick(isComplete = false) {
     if (!sharedAudioCtx) {
       sharedAudioCtx = new AudioCtx();
     }
-    if (sharedAudioCtx.state === 'suspended') {
-      sharedAudioCtx.resume().catch(() => {});
+    if (sharedAudioCtx.state === 'running') {
+      triggerTickNodes(sharedAudioCtx, isComplete);
+    } else {
+      sharedAudioCtx.resume().then(() => {
+        if (sharedAudioCtx && sharedAudioCtx.state === 'running') {
+          triggerTickNodes(sharedAudioCtx, isComplete);
+        }
+      }).catch(() => {});
     }
-
-    const now = sharedAudioCtx.currentTime;
-
-    // Crisp mechanical key click (short filtered noise burst)
-    const bufferSize = Math.floor(sharedAudioCtx.sampleRate * 0.028);
-    const buffer = sharedAudioCtx.createBuffer(1, bufferSize, sharedAudioCtx.sampleRate);
-    const data = buffer.getChannelData(0);
-    for (let i = 0; i < bufferSize; i++) {
-      data[i] = (Math.random() * 2 - 1) * Math.exp(-i / (bufferSize * 0.28));
-    }
-
-    const noise = sharedAudioCtx.createBufferSource();
-    noise.buffer = buffer;
-
-    const filter = sharedAudioCtx.createBiquadFilter();
-    filter.type = 'bandpass';
-    filter.frequency.setValueAtTime(isComplete ? 2400 : 1750 + Math.random() * 350, now);
-    filter.Q.setValueAtTime(1.4, now);
-
-    const gain = sharedAudioCtx.createGain();
-    gain.gain.setValueAtTime(isComplete ? 0.32 : 0.22, now);
-    gain.gain.exponentialRampToValueAtTime(0.001, now + 0.03);
-
-    noise.connect(filter);
-    filter.connect(gain);
-    gain.connect(sharedAudioCtx.destination);
-    noise.start(now);
-
-    // Tactile mechanical body thump
-    const osc = sharedAudioCtx.createOscillator();
-    const oscGain = sharedAudioCtx.createGain();
-    osc.type = 'triangle';
-    osc.frequency.setValueAtTime(isComplete ? 540 : 185 + Math.random() * 30, now);
-    osc.frequency.exponentialRampToValueAtTime(isComplete ? 920 : 80, now + 0.032);
-    oscGain.gain.setValueAtTime(isComplete ? 0.2 : 0.12, now);
-    oscGain.gain.exponentialRampToValueAtTime(0.001, now + 0.035);
-
-    osc.connect(oscGain);
-    oscGain.connect(sharedAudioCtx.destination);
-    osc.start(now);
-    osc.stop(now + 0.038);
   } catch {
     // Ignore audio errors if blocked by browser autoplay policy
   }
