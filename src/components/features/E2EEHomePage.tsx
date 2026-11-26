@@ -12,7 +12,7 @@ interface E2EEHomePageProps {
 export const E2EEHomePage: React.FC<E2EEHomePageProps> = ({ onNavigateToSimulator, isInitialReady = true }) => {
   const reducedMotion = useReducedMotion();
   const [ciphertext, setCiphertext] = useState<string>('c9f1 82ae 0b7d 44e3 91a0');
-  const [journeyPhase, setJourneyPhase] = useState<'idle' | 'animating'>('animating');
+  const [bubbleStage, setBubbleStage] = useState<'aarav' | 'meera' | 'gap'>('aarav');
   const [isPaused, setIsPaused] = useState<boolean>(false);
   const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
@@ -35,22 +35,42 @@ export const E2EEHomePage: React.FC<E2EEHomePageProps> = ({ onNavigateToSimulato
     runCryptoJourney();
   }, []);
 
-  // Journey animation loop: 11.0s total cycle (Aarav +2s -> Meera +2s -> 4s gap)
+  // Journey animation loop: Aarav (3.7s) -> Meera (3.7s) -> 4.0s gap
   useEffect(() => {
-    if (reducedMotion || isPaused) return;
+    if (reducedMotion || isPaused) {
+      setBubbleStage('aarav');
+      return;
+    }
 
-    setJourneyPhase('animating');
-    const cycleTime = 11000;
+    let cancelled = false;
+    const timers: ReturnType<typeof setTimeout>[] = [];
 
-    const interval = setInterval(() => {
-      runCryptoJourney();
-      setJourneyPhase('idle');
-      setTimeout(() => {
-        setJourneyPhase('animating');
-      }, 80);
-    }, cycleTime);
+    const runCycle = () => {
+      if (cancelled) return;
+      setBubbleStage('aarav');
+      timers.push(
+        setTimeout(() => {
+          if (!cancelled) setBubbleStage('meera');
+        }, 3700)
+      );
+      timers.push(
+        setTimeout(() => {
+          if (!cancelled) setBubbleStage('gap');
+        }, 7400)
+      );
+      timers.push(
+        setTimeout(() => {
+          if (!cancelled) runCycle();
+        }, 11400)
+      );
+    };
 
-    return () => clearInterval(interval);
+    runCycle();
+
+    return () => {
+      cancelled = true;
+      timers.forEach(clearTimeout);
+    };
   }, [reducedMotion, isPaused]);
 
   const handleReplay = () => {
@@ -122,27 +142,17 @@ export const E2EEHomePage: React.FC<E2EEHomePageProps> = ({ onNavigateToSimulato
           {/* LEFT: Aarav (Proportioned Editorial Illustration, Holding Phone) */}
           <div className="w-full flex flex-col items-center lg:items-end justify-center relative order-2 lg:order-1 pt-8 lg:pt-0">
             <div className="relative w-[175px] sm:w-[210px] md:w-[225px] lg:w-[235px] flex flex-col items-center">
-              {/* Sent Speech Bubble Pop-up: Stays 3s, slides in "Delivered", then wipes away directly to the side (no fade) */}
+              {/* Sent Speech Bubble Pop-up: Enters, shows sequential blue ticks, stays 2s+, wipes out */}
               <motion.div
+                key={`aarav-${bubbleStage === 'aarav' ? 'on' : 'off'}`}
                 initial={false}
                 animate={
-                  reducedMotion
+                  reducedMotion || bubbleStage === 'aarav'
                     ? { clipPath: 'inset(0 0% 0 0)', opacity: 1 }
-                    : journeyPhase === 'animating'
-                    ? {
-                        clipPath: [
-                          'inset(0 100% 0 0)',
-                          'inset(0 0% 0 0)',
-                          'inset(0 0% 0 0)',
-                          'inset(0 0% 0 100%)',
-                          'inset(0 0% 0 100%)',
-                        ],
-                      }
-                    : { clipPath: 'inset(0 100% 0 0)' }
+                    : { clipPath: 'inset(0 0% 0 100%)', opacity: 0 }
                 }
                 transition={{
-                  duration: 11,
-                  times: [0, 0.045, 0.29, 0.34, 1],
+                  duration: 0.42,
                   ease: [0.22, 1, 0.36, 1],
                 }}
                 className="mb-2.5 sm:mb-0 sm:absolute sm:-top-11 sm:left-2 z-20 relative overflow-hidden bg-[#CFE3C9] border border-[#9EC098] text-[#153A32] text-sm sm:text-[15px] font-semibold px-4 py-2 rounded-t-2xl rounded-br-2xl shadow-[0_6px_16px_rgba(21,58,50,0.08)] whitespace-nowrap"
@@ -158,7 +168,7 @@ export const E2EEHomePage: React.FC<E2EEHomePageProps> = ({ onNavigateToSimulato
                 />
                 <span className="relative z-10 inline-flex items-center gap-2">
                   <span>See you tomorrow?</span>
-                  {/* Authentic WhatsApp blue ticks: first tick then second tick, sized to text height */}
+                  {/* Authentic WhatsApp blue ticks: first tick then second tick */}
                   <span className="inline-flex items-center shrink-0" aria-label="Delivered">
                     <svg width="14" height="10" viewBox="0 0 18 11" fill="none" aria-hidden="true">
                       <motion.path
@@ -167,18 +177,9 @@ export const E2EEHomePage: React.FC<E2EEHomePageProps> = ({ onNavigateToSimulato
                         strokeWidth="1.8"
                         strokeLinecap="round"
                         strokeLinejoin="round"
-                        initial={false}
-                        animate={
-                          reducedMotion
-                            ? { opacity: 1 }
-                            : journeyPhase === 'animating'
-                            ? { opacity: [0, 0, 1, 1, 1] }
-                            : { opacity: 0 }
-                        }
-                        transition={{
-                          duration: 11,
-                          times: [0, 0.055, 0.08, 0.29, 1],
-                        }}
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: reducedMotion || bubbleStage === 'aarav' ? 1 : 0 }}
+                        transition={{ duration: 0.25, delay: bubbleStage === 'aarav' ? 0.55 : 0 }}
                       />
                       <motion.path
                         d="M6.5 5.8L9.8 9.2L16.5 1.8"
@@ -186,40 +187,13 @@ export const E2EEHomePage: React.FC<E2EEHomePageProps> = ({ onNavigateToSimulato
                         strokeWidth="1.8"
                         strokeLinecap="round"
                         strokeLinejoin="round"
-                        initial={false}
-                        animate={
-                          reducedMotion
-                            ? { opacity: 1 }
-                            : journeyPhase === 'animating'
-                            ? { opacity: [0, 0, 1, 1] }
-                            : { opacity: 0 }
-                        }
-                        transition={{
-                          duration: 11,
-                          times: [0, 0.085, 0.11, 1],
-                        }}
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: reducedMotion || bubbleStage === 'aarav' ? 1 : 0 }}
+                        transition={{ duration: 0.25, delay: bubbleStage === 'aarav' ? 1.05 : 0 }}
                       />
                     </svg>
                   </span>
                 </span>
-                {/* BlockReveal wipe overlay on Aarav's pop-up entry and exit */}
-                {!reducedMotion && (
-                  <motion.div
-                    initial={false}
-                    animate={
-                      journeyPhase === 'animating'
-                        ? { scaleX: [0, 1, 0, 0, 1, 1, 0], originX: [0, 0, 1, 0, 0, 1, 1] }
-                        : { scaleX: 0 }
-                    }
-                    transition={{
-                      duration: 11,
-                      times: [0, 0.025, 0.05, 0.28, 0.30, 0.34, 0.36],
-                      ease: [0.22, 1, 0.36, 1],
-                    }}
-                    className="absolute inset-0 z-20 bg-[#176B50] pointer-events-none"
-                    aria-hidden="true"
-                  />
-                )}
               </motion.div>
 
               {/* Aarav Vector Illustration Artwork */}
@@ -284,27 +258,17 @@ export const E2EEHomePage: React.FC<E2EEHomePageProps> = ({ onNavigateToSimulato
           {/* RIGHT: Meera (Proportioned Editorial Illustration, Holding Phone) */}
           <div className="w-full flex flex-col items-center lg:items-start justify-center relative order-3 pt-8 lg:pt-0">
             <div className="relative w-[175px] sm:w-[210px] md:w-[225px] lg:w-[235px] flex flex-col items-center">
-              {/* Received Speech Bubble Pop-up: Wipes in from the side simultaneously as Aarav's wipes out (no fade) */}
+              {/* Received Speech Bubble Pop-up: Enters simultaneously as Aarav's exits, shows sequential blue ticks, stays 2s+, wipes out */}
               <motion.div
+                key={`meera-${bubbleStage === 'meera' ? 'on' : 'off'}`}
                 initial={false}
                 animate={
-                  reducedMotion
+                  reducedMotion || bubbleStage === 'meera'
                     ? { clipPath: 'inset(0 0% 0 0)', opacity: 1 }
-                    : journeyPhase === 'animating'
-                    ? {
-                        clipPath: [
-                          'inset(0 100% 0 0)',
-                          'inset(0 100% 0 0)',
-                          'inset(0 0% 0 0)',
-                          'inset(0 0% 0 0)',
-                          'inset(0 0% 0 100%)',
-                        ],
-                      }
-                    : { clipPath: 'inset(0 100% 0 0)' }
+                    : { clipPath: 'inset(0 0% 0 100%)', opacity: 0 }
                 }
                 transition={{
-                  duration: 11,
-                  times: [0, 0.30, 0.35, 0.59, 0.64],
+                  duration: 0.42,
                   ease: [0.22, 1, 0.36, 1],
                 }}
                 className="mb-2.5 sm:mb-0 sm:absolute sm:-top-11 sm:right-2 z-20 relative overflow-hidden bg-[#CFE3C9] border border-[#9EC098] text-[#153A32] text-sm sm:text-[15px] font-semibold px-4 py-2 rounded-t-2xl rounded-bl-2xl shadow-[0_6px_16px_rgba(21,58,50,0.08)] whitespace-nowrap"
@@ -329,18 +293,9 @@ export const E2EEHomePage: React.FC<E2EEHomePageProps> = ({ onNavigateToSimulato
                         strokeWidth="1.8"
                         strokeLinecap="round"
                         strokeLinejoin="round"
-                        initial={false}
-                        animate={
-                          reducedMotion
-                            ? { opacity: 1 }
-                            : journeyPhase === 'animating'
-                            ? { opacity: [0, 0, 1, 1] }
-                            : { opacity: 0 }
-                        }
-                        transition={{
-                          duration: 11,
-                          times: [0, 0.355, 0.38, 1],
-                        }}
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: reducedMotion || bubbleStage === 'meera' ? 1 : 0 }}
+                        transition={{ duration: 0.25, delay: bubbleStage === 'meera' ? 0.55 : 0 }}
                       />
                       <motion.path
                         d="M6.5 5.8L9.8 9.2L16.5 1.8"
@@ -348,40 +303,13 @@ export const E2EEHomePage: React.FC<E2EEHomePageProps> = ({ onNavigateToSimulato
                         strokeWidth="1.8"
                         strokeLinecap="round"
                         strokeLinejoin="round"
-                        initial={false}
-                        animate={
-                          reducedMotion
-                            ? { opacity: 1 }
-                            : journeyPhase === 'animating'
-                            ? { opacity: [0, 0, 1, 1] }
-                            : { opacity: 0 }
-                        }
-                        transition={{
-                          duration: 11,
-                          times: [0, 0.385, 0.41, 1],
-                        }}
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: reducedMotion || bubbleStage === 'meera' ? 1 : 0 }}
+                        transition={{ duration: 0.25, delay: bubbleStage === 'meera' ? 1.05 : 0 }}
                       />
                     </svg>
                   </span>
                 </span>
-                {/* BlockReveal wipe overlay on Meera's pop-up entry and exit */}
-                {!reducedMotion && (
-                  <motion.div
-                    initial={false}
-                    animate={
-                      journeyPhase === 'animating'
-                        ? { scaleX: [0, 0, 1, 0, 0, 1, 0], originX: [0, 0, 0, 1, 0, 0, 1] }
-                        : { scaleX: 0 }
-                    }
-                    transition={{
-                      duration: 11,
-                      times: [0, 0.30, 0.33, 0.36, 0.58, 0.61, 0.65],
-                      ease: [0.22, 1, 0.36, 1],
-                    }}
-                    className="absolute inset-0 z-20 bg-[#176B50] pointer-events-none"
-                    aria-hidden="true"
-                  />
-                )}
               </motion.div>
 
               {/* Meera Vector Illustration Artwork */}
