@@ -572,7 +572,7 @@
   content: '';
   position: absolute;
   inset: 0;
-  background-image: url('/whatsapp-doodle.svg');
+  background-image: url('./whatsapp-doodle.svg');
   background-repeat: repeat;
   background-size: 460px auto;
   filter: invert(1);

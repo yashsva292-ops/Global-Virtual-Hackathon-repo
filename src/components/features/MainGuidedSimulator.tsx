@@ -296,7 +296,7 @@ export const MainGuidedSimulator: React.FC = () => {
               <div
                 className="absolute inset-0 pointer-events-none opacity-[0.16]"
                 style={{
-                  backgroundImage: 'url(/whatsapp-doodle.svg)',
+                  backgroundImage: 'url(./whatsapp-doodle.svg)',
                   backgroundRepeat: 'repeat',
                   backgroundSize: '340px auto',
                 }}

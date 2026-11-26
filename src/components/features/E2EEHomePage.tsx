@@ -79,7 +79,7 @@ export const E2EEHomePage: React.FC<E2EEHomePageProps> = ({ onNavigateToSimulato
         className="pointer-events-none absolute inset-0 z-0 overflow-hidden"
         style={{
           opacity: 0.15,
-          backgroundImage: 'url(/whatsapp-doodle.svg)',
+          backgroundImage: 'url(./whatsapp-doodle.svg)',
           backgroundSize: '440px 799px',
           backgroundRepeat: 'repeat',
           maskImage: 'radial-gradient(ellipse 65% 55% at 50% 44%, rgba(0,0,0,0.06) 0%, rgba(0,0,0,0.20) 40%, rgba(0,0,0,0.75) 75%, black 100%)',
