@@ -122,20 +122,21 @@ export const E2EEHomePage: React.FC<E2EEHomePageProps> = ({ onNavigateToSimulato
           {/* LEFT: Aarav (Proportioned Editorial Illustration, Holding Phone) */}
           <div className="w-full flex flex-col items-center lg:items-end justify-center relative order-2 lg:order-1 pt-8 lg:pt-0">
             <div className="relative w-[175px] sm:w-[210px] md:w-[225px] lg:w-[235px] flex flex-col items-center">
-              {/* Sent Speech Bubble */}
+              {/* Sent Speech Bubble Pop-up */}
               <motion.div
-                initial={false}
+                initial={reducedMotion ? false : { opacity: 0, scale: 0.82, y: 10 }}
                 animate={
                   reducedMotion
                     ? { opacity: 1 }
                     : journeyPhase === 'animating'
-                    ? { opacity: [1, 1, 0.55, 0.55, 1], y: [0, 0, 0, 0, 0] }
-                    : { opacity: 1 }
+                    ? { opacity: [1, 1, 0.72, 0.72, 1], scale: [1, 1.04, 1, 1, 1.03], y: [0, -3, 0, 0, -2] }
+                    : { opacity: 1, scale: 1, y: 0 }
                 }
-                transition={{ duration: 5.6, times: [0, 0.15, 0.35, 0.9, 1] }}
-                className="mb-2 sm:mb-0 sm:absolute sm:-top-8 sm:left-4 z-20 bg-[#FFFEF9] border border-[#CCD7C7] text-[#153A32] text-xs sm:text-sm font-medium px-3 sm:px-3.5 py-1.5 rounded-t-xl rounded-br-xl shadow-[0_6px_16px_rgba(21,58,50,0.06)] whitespace-nowrap"
+                transition={{ duration: journeyPhase === 'animating' ? 5.6 : 0.45, ease: [0.22, 1, 0.36, 1] }}
+                className="mb-2.5 sm:mb-0 sm:absolute sm:-top-11 sm:left-2 z-20 bg-[#FFFEF9] border-2 border-[#176B50]/45 text-[#153A32] text-sm sm:text-[15px] font-semibold px-4 py-2 rounded-t-2xl rounded-br-2xl shadow-[0_10px_28px_rgba(21,58,50,0.14)] whitespace-nowrap flex items-center gap-2"
               >
-                See you tomorrow?
+                <span className="w-2 h-2 rounded-full bg-[#176B50] shrink-0" aria-hidden="true" />
+                <span>See you tomorrow?</span>
               </motion.div>
 
               {/* Aarav Vector Illustration Artwork */}
@@ -200,20 +201,21 @@ export const E2EEHomePage: React.FC<E2EEHomePageProps> = ({ onNavigateToSimulato
           {/* RIGHT: Meera (Proportioned Editorial Illustration, Holding Phone) */}
           <div className="w-full flex flex-col items-center lg:items-start justify-center relative order-3 pt-8 lg:pt-0">
             <div className="relative w-[175px] sm:w-[210px] md:w-[225px] lg:w-[235px] flex flex-col items-center">
-              {/* Received Speech Bubble: Decrypts when packet arrives */}
+              {/* Received Speech Bubble Pop-up: Decrypts when packet arrives */}
               <motion.div
-                initial={false}
+                initial={reducedMotion ? false : { opacity: 0, scale: 0.82, y: 10 }}
                 animate={
                   reducedMotion
                     ? { opacity: 1 }
                     : journeyPhase === 'animating'
-                    ? { opacity: [0, 0, 0, 0, 1, 1], y: [6, 6, 6, 6, 0, 0], scale: [0.95, 0.95, 0.95, 0.95, 1, 1] }
-                    : { opacity: 1 }
+                    ? { opacity: [0, 0, 0, 0, 1, 1], y: [8, 8, 8, 8, -3, 0], scale: [0.88, 0.88, 0.88, 0.88, 1.06, 1] }
+                    : { opacity: 1, scale: 1, y: 0 }
                 }
-                transition={{ duration: 5.6, times: [0, 0.72, 0.82, 0.86, 0.92, 1] }}
-                className="mb-2 sm:mb-0 sm:absolute sm:-top-8 sm:right-4 z-20 bg-[#FFFEF9] border border-[#CCD7C7] text-[#153A32] text-xs sm:text-sm font-medium px-3 sm:px-3.5 py-1.5 rounded-t-xl rounded-bl-xl shadow-[0_6px_16px_rgba(21,58,50,0.06)] whitespace-nowrap"
+                transition={{ duration: journeyPhase === 'animating' ? 5.6 : 0.45, times: journeyPhase === 'animating' ? [0, 0.72, 0.82, 0.86, 0.92, 1] : undefined, ease: [0.22, 1, 0.36, 1] }}
+                className="mb-2.5 sm:mb-0 sm:absolute sm:-top-11 sm:right-2 z-20 bg-[#FFFEF9] border-2 border-[#176B50]/45 text-[#153A32] text-sm sm:text-[15px] font-semibold px-4 py-2 rounded-t-2xl rounded-bl-2xl shadow-[0_10px_28px_rgba(21,58,50,0.14)] whitespace-nowrap flex items-center gap-2"
               >
-                See you tomorrow?
+                <span className="w-2 h-2 rounded-full bg-[#176B50] shrink-0" aria-hidden="true" />
+                <span>See you tomorrow?</span>
               </motion.div>
 
               {/* Meera Vector Illustration Artwork */}
