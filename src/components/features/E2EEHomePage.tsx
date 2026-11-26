@@ -144,7 +144,6 @@ export const E2EEHomePage: React.FC<E2EEHomePageProps> = ({ onNavigateToSimulato
             <div className="relative w-[175px] sm:w-[210px] md:w-[225px] lg:w-[235px] flex flex-col items-center">
               {/* Sent Speech Bubble Pop-up: Enters, shows sequential blue ticks, stays 2s+, wipes out */}
               <motion.div
-                key={`aarav-${bubbleStage === 'aarav' ? 'on' : 'off'}`}
                 initial={false}
                 animate={
                   reducedMotion || bubbleStage === 'aarav'
@@ -271,7 +270,6 @@ export const E2EEHomePage: React.FC<E2EEHomePageProps> = ({ onNavigateToSimulato
             <div className="relative w-[175px] sm:w-[210px] md:w-[225px] lg:w-[235px] flex flex-col items-center">
               {/* Received Speech Bubble Pop-up: Enters simultaneously as Aarav's exits, shows sequential blue ticks, stays 2s+, wipes out */}
               <motion.div
-                key={`meera-${bubbleStage === 'meera' ? 'on' : 'off'}`}
                 initial={false}
                 animate={
                   reducedMotion || bubbleStage === 'meera'
