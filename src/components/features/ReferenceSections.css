@@ -792,28 +792,6 @@
   margin-top: 10px;
 }
 
-.ref-sections-root .future-solution {
-  margin-top: 20px;
-  background: #f6f8f0;
-  border: 1px solid var(--line);
-  border-radius: 12px;
-  padding: 22px;
-}
-
-.ref-sections-root .future-solution h3 {
-  font-family: var(--serif);
-  font-weight: 400;
-  font-size: 1.25rem;
-  line-height: 1.25;
-  color: var(--ink);
-}
-
-.ref-sections-root .future-solution p {
-  font-size: 16px;
-  line-height: 1.55;
-  color: var(--muted);
-}
-
 .ref-sections-root .future-footer {
   margin-top: 28px;
   padding-top: 22px;

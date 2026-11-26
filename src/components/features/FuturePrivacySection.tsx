@@ -119,24 +119,6 @@ export const FuturePrivacySection: React.FC = () => {
                 <p className="future-panel-clarification">It does not make stored messages disappear.</p>
               </div>
             </div>
-
-            <div className="future-solution">
-              <div className="future-panel-head">
-                <span className="future-panel-icon" aria-hidden="true">
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">
-                    <path d="M12 3l7 3v5c0 4.5-3 8.2-7 9.8-4-1.6-7-5.3-7-9.8V6l7-3z" />
-                    <path d="M9.5 12l2 2 3.5-3.5" />
-                  </svg>
-                </span>
-                <div>
-                  <span className="future-panel-label">The solution</span>
-                  <h3>Upgrade key establishment before data is collected</h3>
-                </div>
-              </div>
-              <p>
-                Protecting long-lived secrets means adopting quantum-resistant key agreement—such as post-quantum cryptography or hybrid schemes that pair today’s methods with post-quantum algorithms—before encrypted traffic is captured and stored.
-              </p>
-            </div>
           </div>
         </div>
       </section>
