@@ -104,6 +104,10 @@ export const WhyPrivacyMattersStory: React.FC = () => {
 
           <div className="story-demo">
             <div className="view-switch" role="group" aria-label="View the story">
+              <div
+                className={`view-switch-pill ${storyMode === 'relay' ? 'is-relay' : ''}`}
+                aria-hidden="true"
+              />
               <button
                 type="button"
                 id="story-friend"

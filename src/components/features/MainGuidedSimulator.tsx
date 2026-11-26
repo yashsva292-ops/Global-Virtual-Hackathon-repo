@@ -481,8 +481,17 @@ export const MainGuidedSimulator: React.FC = () => {
                   <CheckCircle2 size={16} />
                   <span>Check passed</span>
                 </div>
-                <div className="p-3 bg-white rounded-lg text-sm font-medium text-[#153A32] shadow-2xs">
-                  "{decryptionResult.plaintext}"
+                <div className="relative p-3 rounded-lg border border-[#9EC098] bg-[#CFE3C9] text-sm font-medium text-[#153A32] shadow-2xs overflow-hidden">
+                  <div
+                    className="absolute inset-0 pointer-events-none opacity-[0.16]"
+                    style={{
+                      backgroundImage: 'url(./whatsapp-doodle.svg)',
+                      backgroundRepeat: 'repeat',
+                      backgroundSize: '340px auto',
+                    }}
+                    aria-hidden="true"
+                  />
+                  <span className="relative z-10">"{decryptionResult.plaintext}"</span>
                 </div>
                 <span className="text-[10px] text-[#52665F] mt-2 block font-mono">
                   AES-GCM tag verified: matching message key confirmed.

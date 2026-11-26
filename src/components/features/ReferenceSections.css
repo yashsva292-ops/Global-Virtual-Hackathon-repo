@@ -436,6 +436,7 @@
 }
 
 .ref-sections-root .view-switch {
+  position: relative;
   display: flex;
   background: #d6e1ce;
   border-radius: 9px;
@@ -443,7 +444,26 @@
   gap: 5px;
 }
 
+.ref-sections-root .view-switch-pill {
+  position: absolute;
+  top: 5px;
+  bottom: 5px;
+  left: 5px;
+  width: calc(50% - 7.5px);
+  background: var(--white);
+  border-radius: 6px;
+  box-shadow: 0 2px 6px #153a3214;
+  transition: transform 0.34s cubic-bezier(0.22, 1, 0.36, 1);
+  pointer-events: none;
+}
+
+.ref-sections-root .view-switch-pill.is-relay {
+  transform: translateX(calc(100% + 5px));
+}
+
 .ref-sections-root .view-switch button {
+  position: relative;
+  z-index: 1;
   flex: 1;
   background: none;
   border: 0;
@@ -451,11 +471,10 @@
   padding: 11px 5px;
   color: var(--muted);
   font-size: 0.875rem;
+  transition: color 0.28s ease;
 }
 
 .ref-sections-root .view-switch button.selected {
-  background: var(--white);
-  box-shadow: 0 2px 5px #153a3210;
   color: var(--ink);
 }
 
@@ -469,6 +488,7 @@
   display: flex;
   flex-direction: column;
   gap: 22px;
+  transition: background-color 0.36s ease, color 0.36s ease, border-color 0.36s ease;
 }
 
 .ref-sections-root .story-window > .small {
