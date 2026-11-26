@@ -321,13 +321,13 @@ export const E2EEHomePage: React.FC<E2EEHomePageProps> = ({ onNavigateToSimulato
                     </svg>
                   </span>
                 </span>
-                {/* BlockReveal wipe overlay on Aarav's pop-up */}
+                {/* BlockReveal wipe overlay on Meera's pop-up */}
                 {!reducedMotion && (
                   <motion.div
                     initial={{ scaleX: 1 }}
-                    animate={{ scaleX: bubbleStage === 'aarav' ? 0 : 1 }}
+                    animate={{ scaleX: bubbleStage === 'meera' ? 0 : 1 }}
                     transition={{ duration: 0.42, ease: [0.22, 1, 0.36, 1] }}
-                    style={{ originX: bubbleStage === 'aarav' ? 1 : 0 }}
+                    style={{ originX: bubbleStage === 'meera' ? 1 : 0 }}
                     className="absolute inset-0 z-20 bg-[#176B50] pointer-events-none"
                     aria-hidden="true"
                   />
