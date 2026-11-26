@@ -568,15 +568,13 @@
   padding-top: 80px;
 }
 
-.ref-sections-root .closing::before {
-  content: '';
+.ref-sections-root .closing-doodles {
   position: absolute;
   inset: 0;
-  background-image: url('./whatsapp-doodle.svg');
   background-repeat: repeat;
   background-size: 460px auto;
   filter: invert(1);
-  opacity: 0.1;
+  opacity: 0.11;
   pointer-events: none;
 }
 

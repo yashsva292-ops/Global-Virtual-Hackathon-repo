@@ -119,9 +119,9 @@ export const E2EEHomePage: React.FC<E2EEHomePageProps> = ({ onNavigateToSimulato
           Framing the central title seamlessly without overlapping text.
         */}
         <div className="relative w-full flex-1 flex flex-col lg:flex-row items-center justify-between gap-6 my-auto">
-          {/* LEFT: Aarav (Enlarged, Facing Inward, Holding Phone) */}
-          <div className="w-full lg:w-[24%] flex flex-col items-center lg:items-end justify-center relative order-2 lg:order-1 pt-6 lg:pt-0">
-            <div className="relative w-[180px] sm:w-[220px] md:w-[250px] lg:w-[270px]">
+          {/* LEFT: Aarav (Proportioned Editorial Illustration, Holding Phone) */}
+          <div className="w-full lg:w-[22%] flex flex-col items-center lg:items-end justify-center relative order-2 lg:order-1 pt-8 lg:pt-0">
+            <div className="relative w-[175px] sm:w-[210px] md:w-[230px] lg:w-[240px] flex flex-col items-center">
               {/* Sent Speech Bubble */}
               <motion.div
                 initial={false}
@@ -133,7 +133,7 @@ export const E2EEHomePage: React.FC<E2EEHomePageProps> = ({ onNavigateToSimulato
                     : { opacity: 1 }
                 }
                 transition={{ duration: 5.6, times: [0, 0.15, 0.35, 0.9, 1] }}
-                className="absolute -top-7 sm:-top-8 left-6 sm:left-10 z-20 bg-[#FFFEF9] border border-[#CCD7C7] text-[#153A32] text-xs sm:text-sm font-medium px-3 sm:px-3.5 py-1.5 rounded-t-xl rounded-br-xl shadow-[0_6px_16px_rgba(21,58,50,0.06)] whitespace-nowrap"
+                className="mb-2 sm:mb-0 sm:absolute sm:-top-8 sm:left-4 z-20 bg-[#FFFEF9] border border-[#CCD7C7] text-[#153A32] text-xs sm:text-sm font-medium px-3 sm:px-3.5 py-1.5 rounded-t-xl rounded-br-xl shadow-[0_6px_16px_rgba(21,58,50,0.06)] whitespace-nowrap"
               >
                 See you tomorrow?
               </motion.div>
@@ -141,8 +141,10 @@ export const E2EEHomePage: React.FC<E2EEHomePageProps> = ({ onNavigateToSimulato
               {/* Aarav Vector Illustration Artwork */}
               <img
                 src="./assets/aarav.svg"
+                width={260}
+                height={340}
                 alt="Aarav holding his phone"
-                className="w-full h-auto object-contain drop-shadow-md select-none"
+                className="w-full h-auto aspect-[260/340] object-contain drop-shadow-[0_10px_24px_rgba(21,58,50,0.08)] select-none"
               />
 
               {/* Restrained Endpoint Label */}
@@ -195,9 +197,9 @@ export const E2EEHomePage: React.FC<E2EEHomePageProps> = ({ onNavigateToSimulato
             />
           </div>
 
-          {/* RIGHT: Meera (Enlarged, Facing Inward, Holding Phone) */}
-          <div className="w-full lg:w-[24%] flex flex-col items-center lg:items-start justify-center relative order-3 pt-6 lg:pt-0">
-            <div className="relative w-[180px] sm:w-[220px] md:w-[250px] lg:w-[270px]">
+          {/* RIGHT: Meera (Proportioned Editorial Illustration, Holding Phone) */}
+          <div className="w-full lg:w-[22%] flex flex-col items-center lg:items-start justify-center relative order-3 pt-8 lg:pt-0">
+            <div className="relative w-[175px] sm:w-[210px] md:w-[230px] lg:w-[240px] flex flex-col items-center">
               {/* Received Speech Bubble: Decrypts when packet arrives */}
               <motion.div
                 initial={false}
@@ -209,7 +211,7 @@ export const E2EEHomePage: React.FC<E2EEHomePageProps> = ({ onNavigateToSimulato
                     : { opacity: 1 }
                 }
                 transition={{ duration: 5.6, times: [0, 0.72, 0.82, 0.86, 0.92, 1] }}
-                className="absolute -top-7 sm:-top-8 right-6 sm:right-10 z-20 bg-[#FFFEF9] border border-[#CCD7C7] text-[#153A32] text-xs sm:text-sm font-medium px-3 sm:px-3.5 py-1.5 rounded-t-xl rounded-bl-xl shadow-[0_6px_16px_rgba(21,58,50,0.06)] whitespace-nowrap"
+                className="mb-2 sm:mb-0 sm:absolute sm:-top-8 sm:right-4 z-20 bg-[#FFFEF9] border border-[#CCD7C7] text-[#153A32] text-xs sm:text-sm font-medium px-3 sm:px-3.5 py-1.5 rounded-t-xl rounded-bl-xl shadow-[0_6px_16px_rgba(21,58,50,0.06)] whitespace-nowrap"
               >
                 See you tomorrow?
               </motion.div>
@@ -217,8 +219,10 @@ export const E2EEHomePage: React.FC<E2EEHomePageProps> = ({ onNavigateToSimulato
               {/* Meera Vector Illustration Artwork */}
               <img
                 src="./assets/meera.svg"
+                width={260}
+                height={340}
                 alt="Meera holding her phone"
-                className="w-full h-auto object-contain drop-shadow-md select-none"
+                className="w-full h-auto aspect-[260/340] object-contain drop-shadow-[0_10px_24px_rgba(21,58,50,0.08)] select-none"
               />
 
               {/* Restrained Endpoint Label */}

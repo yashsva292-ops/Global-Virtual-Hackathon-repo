@@ -39,15 +39,22 @@ if (typeof window !== 'undefined') {
   window.addEventListener('touchstart', gestureUnlock, { passive: true });
 }
 
+let lastTickTime = 0;
+
 function triggerTickNodes(ctx: AudioContext, isComplete: boolean) {
+  const nowMs = performance.now();
+  // Throttle to natural vintage typewriter cadence (never buzz at 30+ Hz)
+  if (!isComplete && nowMs - lastTickTime < 78) return;
+  lastTickTime = nowMs;
+
   const now = ctx.currentTime;
 
-  // Crisp mechanical key click (short filtered noise burst)
-  const bufferSize = Math.floor(ctx.sampleRate * 0.028);
+  // 1. Crisp, clean mechanical keystroke transient (high-frequency wood/metal strike, 10ms)
+  const bufferSize = Math.floor(ctx.sampleRate * 0.011);
   const buffer = ctx.createBuffer(1, bufferSize, ctx.sampleRate);
   const data = buffer.getChannelData(0);
   for (let i = 0; i < bufferSize; i++) {
-    data[i] = (Math.random() * 2 - 1) * Math.exp(-i / (bufferSize * 0.28));
+    data[i] = (Math.random() * 2 - 1) * Math.exp(-i / (bufferSize * 0.18));
   }
 
   const noise = ctx.createBufferSource();
@@ -55,31 +62,30 @@ function triggerTickNodes(ctx: AudioContext, isComplete: boolean) {
 
   const filter = ctx.createBiquadFilter();
   filter.type = 'bandpass';
-  filter.frequency.setValueAtTime(isComplete ? 2400 : 1750 + Math.random() * 350, now);
-  filter.Q.setValueAtTime(1.4, now);
+  filter.frequency.setValueAtTime(isComplete ? 4200 : 3400 + Math.random() * 600, now);
+  filter.Q.setValueAtTime(2.2, now);
 
   const gain = ctx.createGain();
-  gain.gain.setValueAtTime(isComplete ? 0.32 : 0.22, now);
-  gain.gain.exponentialRampToValueAtTime(0.001, now + 0.03);
+  gain.gain.setValueAtTime(isComplete ? 0.11 : 0.075, now);
+  gain.gain.exponentialRampToValueAtTime(0.0008, now + 0.012);
 
   noise.connect(filter);
   filter.connect(gain);
   gain.connect(ctx.destination);
   noise.start(now);
 
-  // Tactile mechanical body thump
+  // 2. Subtle high keycap tap (clean sine ping at 1050-1350Hz, zero low-end buzz)
   const osc = ctx.createOscillator();
   const oscGain = ctx.createGain();
-  osc.type = 'triangle';
-  osc.frequency.setValueAtTime(isComplete ? 540 : 185 + Math.random() * 30, now);
-  osc.frequency.exponentialRampToValueAtTime(isComplete ? 920 : 80, now + 0.032);
-  oscGain.gain.setValueAtTime(isComplete ? 0.2 : 0.12, now);
-  oscGain.gain.exponentialRampToValueAtTime(0.001, now + 0.035);
+  osc.type = 'sine';
+  osc.frequency.setValueAtTime(isComplete ? 1560 : 1080 + Math.random() * 220, now);
+  oscGain.gain.setValueAtTime(isComplete ? 0.05 : 0.025, now);
+  oscGain.gain.exponentialRampToValueAtTime(0.0005, now + (isComplete ? 0.06 : 0.014));
 
   osc.connect(oscGain);
   oscGain.connect(ctx.destination);
   osc.start(now);
-  osc.stop(now + 0.038);
+  osc.stop(now + (isComplete ? 0.065 : 0.016));
 }
 
 function playTypewriterTick(isComplete = false) {

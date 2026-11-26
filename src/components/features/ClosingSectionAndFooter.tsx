@@ -13,6 +13,11 @@ export const ClosingSectionAndFooter: React.FC<ClosingSectionProps> = ({
   return (
     <div className="ref-sections-root">
       <section className="closing" id="closing-takeaway">
+        <div
+          className="closing-doodles"
+          aria-hidden="true"
+          style={{ backgroundImage: 'url(./whatsapp-doodle.svg)' }}
+        />
         <div className="content">
           <div className="closing-mark" aria-hidden="true">
             <svg viewBox="0 0 40 40">
