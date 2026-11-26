@@ -545,22 +545,22 @@ export const WordsPreloader: React.FC<WordsPreloaderProps> = ({
         setProgress(current);
         playTypewriterTick(false);
 
-        // Deliberate, natural breathing pace
-        let delay = 34;
+        // Deliberate, natural breathing pace (~10% faster)
+        let delay = 30;
         if (current >= 99) {
-          delay = 680; // Intentional 99% suspense pause before synchronized 100% + final 'L'
+          delay = 610; // Intentional 99% suspense pause before synchronized 100% + final 'L'
         } else if (current >= 88) {
-          delay = 120 + (current - 88) * 14; // Smooth heavy deceleration
+          delay = 108 + (current - 88) * 13; // Smooth heavy deceleration
         } else if (current >= 70) {
-          delay = 50 + (current - 70) * 4; // Gradual early deceleration
+          delay = 45 + (current - 70) * 3.5; // Gradual early deceleration
         } else {
-          delay = 34; // Steady, readable progression
+          delay = 30; // Steady, readable progression
         }
 
         timer = setTimeout(step, delay);
       };
 
-      timer = setTimeout(step, 120);
+      timer = setTimeout(step, 108);
 
       return () => {
         if (timer) clearTimeout(timer);
