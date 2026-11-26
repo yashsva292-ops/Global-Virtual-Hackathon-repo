@@ -630,7 +630,7 @@ export const MainGuidedSimulator: React.FC = () => {
                 disabled={isComputing}
                 className="w-full sm:w-auto px-6 py-3.5 rounded-xl bg-[#176B50] text-[#F7F4EC] font-semibold text-sm hover:bg-[#135942] active:scale-[0.98] transition-all flex items-center justify-center gap-2 cursor-pointer"
               >
-                Prepare our keys
+                Make matching secrets
                 <ArrowRight size={16} />
               </button>
             )}
@@ -702,11 +702,18 @@ export const MainGuidedSimulator: React.FC = () => {
         {/* Optional "How?" Disclosure */}
         <div className="mt-4 pt-4 border-t border-[#E3EDE3]">
           <button
+            type="button"
             onClick={() => setShowHowDisclosure((v) => !v)}
+            aria-expanded={showHowDisclosure}
+            aria-label={
+              currentStep === 1
+                ? 'How do the devices make matching secrets?'
+                : 'How does this specific step work behind the scenes?'
+            }
             className="text-xs font-semibold text-[#176B50] hover:underline flex items-center gap-1 cursor-pointer"
           >
             <HelpCircle size={14} />
-            <span>How does this specific step work behind the scenes?</span>
+            <span>How?</span>
             {showHowDisclosure ? <ChevronUp size={14} /> : <ChevronDown size={14} />}
           </button>
 
@@ -725,7 +732,7 @@ export const MainGuidedSimulator: React.FC = () => {
                 )}
                 {currentStep === 1 && (
                   <p>
-                    Elliptic Curve Diffie-Hellman (ECDH P-256) lets Device A and Device B combine their own private key with the other's public key. Both arrive at the exact same 256-bit point without transmitting that point over the wire.
+                    Each device uses its own private information and the other device’s public information to calculate matching secret material. They do not send that secret to each other. This calculation is called key agreement. This demo uses ECDH P-256.
                   </p>
                 )}
                 {currentStep === 2 && (
@@ -735,12 +742,12 @@ export const MainGuidedSimulator: React.FC = () => {
                 )}
                 {currentStep === 3 && (
                   <p>
-                    Upon arrival, AES-GCM recalculates the tag. If the tag matches within constant time, decryption proceeds. If even one bit differs, the browser's cryptographic engine throws an error and rejects the output.
+                    The browser checks and decrypts the packet. It returns the readable message only if verification succeeds. If verification fails, the packet is rejected.
                   </p>
                 )}
                 {currentStep === 4 && (
                   <p>
-                    Galois/Counter Mode (GCM) provides authenticity and integrity alongside confidentiality. Altering ciphertext breaks the polynomial evaluation hash (GHASH), making unauthorized tampering immediately detectable.
+                    The recipient checks whether the protected data is valid. In this experiment, changing one bit causes that check to fail, so the changed packet is rejected. Someone can change or block data on the way. The check helps prevent an unauthorised change from being accepted as your message.
                   </p>
                 )}
               </motion.div>
@@ -774,7 +781,7 @@ export const MainGuidedSimulator: React.FC = () => {
             </div>
             <div className="p-3.5 rounded-xl bg-white text-xs text-[#153A32] border border-[#D3CDC2]">
               <strong className="block text-[#B8443E] mb-1">3. Alterations Rejected</strong>
-              Altered packets fail cryptographic verification and cannot be decrypted.
+              An invalid altered packet is rejected instead of being accepted as your message.
             </div>
           </div>
 
@@ -809,8 +816,8 @@ export const MainGuidedSimulator: React.FC = () => {
             {quizSelection && (
               <p className="mt-3 text-xs text-[#153A32] font-medium">
                 {quizSelection === "Sender’s device"
-                  ? "Correct! The message is encrypted inside the sender's device before transmission."
-                  : "Not quite. Remember, the server only ever receives ciphertext; encryption occurs on the sender's device."}
+                  ? "Correct. The sender’s device encrypts the message before sending it. The server receives encrypted contents and delivery information, but not the secret message key."
+                  : "The sender’s device encrypts the message before sending it. The server receives encrypted contents and delivery information, but not the secret message key."}
               </p>
             )}
           </div>
