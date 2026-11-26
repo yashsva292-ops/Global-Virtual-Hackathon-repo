@@ -158,24 +158,22 @@ export const E2EEHomePage: React.FC<E2EEHomePageProps> = ({ onNavigateToSimulato
                 />
                 <span className="relative z-10 inline-flex items-center gap-2">
                   <span>See you tomorrow?</span>
-                  {/* Authentic WhatsApp single-tick -> double-tick -> blue double-tick */}
-                  <span className="inline-flex items-center" aria-label="Delivered">
-                    <svg width="18" height="11" viewBox="0 0 18 11" fill="none" aria-hidden="true">
+                  {/* Authentic WhatsApp blue ticks: first tick then second tick, sized to text height */}
+                  <span className="inline-flex items-center shrink-0" aria-label="Delivered">
+                    <svg width="14" height="10" viewBox="0 0 18 11" fill="none" aria-hidden="true">
                       <motion.path
                         d="M1.5 5.8L4.8 9.2L11.5 1.8"
-                        strokeWidth="1.65"
+                        stroke="#53BDEB"
+                        strokeWidth="1.8"
                         strokeLinecap="round"
                         strokeLinejoin="round"
                         initial={false}
                         animate={
                           reducedMotion
-                            ? { opacity: 1, stroke: '#53BDEB' }
+                            ? { opacity: 1 }
                             : journeyPhase === 'animating'
-                            ? {
-                                opacity: [0, 0, 1, 1, 1],
-                                stroke: ['#667781', '#667781', '#667781', '#53BDEB', '#53BDEB'],
-                              }
-                            : { opacity: 0, stroke: '#667781' }
+                            ? { opacity: [0, 0, 1, 1, 1] }
+                            : { opacity: 0 }
                         }
                         transition={{
                           duration: 7.5,
@@ -184,19 +182,17 @@ export const E2EEHomePage: React.FC<E2EEHomePageProps> = ({ onNavigateToSimulato
                       />
                       <motion.path
                         d="M6.5 5.8L9.8 9.2L16.5 1.8"
-                        strokeWidth="1.65"
+                        stroke="#53BDEB"
+                        strokeWidth="1.8"
                         strokeLinecap="round"
                         strokeLinejoin="round"
                         initial={false}
                         animate={
                           reducedMotion
-                            ? { opacity: 1, stroke: '#53BDEB' }
+                            ? { opacity: 1 }
                             : journeyPhase === 'animating'
-                            ? {
-                                opacity: [0, 0, 1, 1],
-                                stroke: ['#667781', '#667781', '#53BDEB', '#53BDEB'],
-                              }
-                            : { opacity: 0, stroke: '#667781' }
+                            ? { opacity: [0, 0, 1, 1] }
+                            : { opacity: 0 }
                         }
                         transition={{
                           duration: 7.5,
@@ -337,10 +333,10 @@ export const E2EEHomePage: React.FC<E2EEHomePageProps> = ({ onNavigateToSimulato
                       duration: 7.5,
                       times: [0, 0.61, 0.67, 1],
                     }}
-                    className="inline-flex items-center text-[#53BDEB]"
+                    className="inline-flex items-center shrink-0 text-[#53BDEB]"
                     aria-label="Read"
                   >
-                    <svg width="18" height="11" viewBox="0 0 18 11" fill="none" stroke="currentColor" strokeWidth="1.65" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                    <svg width="14" height="10" viewBox="0 0 18 11" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
                       <path d="M1.5 5.8L4.8 9.2L11.5 1.8" />
                       <path d="M6.5 5.8L9.8 9.2L16.5 1.8" />
                     </svg>
