@@ -51,17 +51,17 @@ export const E2EEHomePage: React.FC<E2EEHomePageProps> = ({ onNavigateToSimulato
       timers.push(
         setTimeout(() => {
           if (!cancelled) setBubbleStage('meera');
-        }, 3700)
+        }, 4500)
       );
       timers.push(
         setTimeout(() => {
           if (!cancelled) setBubbleStage('gap');
-        }, 7400)
+        }, 9000)
       );
       timers.push(
         setTimeout(() => {
           if (!cancelled) runCycle();
-        }, 11400)
+        }, 13000)
       );
     };
 
@@ -194,6 +194,17 @@ export const E2EEHomePage: React.FC<E2EEHomePageProps> = ({ onNavigateToSimulato
                     </svg>
                   </span>
                 </span>
+                {/* BlockReveal wipe overlay on Aarav's pop-up */}
+                {!reducedMotion && (
+                  <motion.div
+                    initial={{ scaleX: 1 }}
+                    animate={{ scaleX: bubbleStage === 'aarav' ? 0 : 1 }}
+                    transition={{ duration: 0.42, ease: [0.22, 1, 0.36, 1] }}
+                    style={{ originX: bubbleStage === 'aarav' ? 1 : 0 }}
+                    className="absolute inset-0 z-20 bg-[#176B50] pointer-events-none"
+                    aria-hidden="true"
+                  />
+                )}
               </motion.div>
 
               {/* Aarav Vector Illustration Artwork */}
@@ -310,6 +321,17 @@ export const E2EEHomePage: React.FC<E2EEHomePageProps> = ({ onNavigateToSimulato
                     </svg>
                   </span>
                 </span>
+                {/* BlockReveal wipe overlay on Aarav's pop-up */}
+                {!reducedMotion && (
+                  <motion.div
+                    initial={{ scaleX: 1 }}
+                    animate={{ scaleX: bubbleStage === 'aarav' ? 0 : 1 }}
+                    transition={{ duration: 0.42, ease: [0.22, 1, 0.36, 1] }}
+                    style={{ originX: bubbleStage === 'aarav' ? 1 : 0 }}
+                    className="absolute inset-0 z-20 bg-[#176B50] pointer-events-none"
+                    aria-hidden="true"
+                  />
+                )}
               </motion.div>
 
               {/* Meera Vector Illustration Artwork */}
