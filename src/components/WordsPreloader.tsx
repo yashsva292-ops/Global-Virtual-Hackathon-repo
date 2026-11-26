@@ -5,6 +5,67 @@ import { LumenInteractiveShader } from './features/LumenInteractiveShader';
 
 export type WordPreloaderPhase = 'idle' | 'expanding' | 'loading' | 'exiting';
 
+// Shared Web Audio typewriter tick synthesizer for loading digit changes
+let sharedAudioCtx: AudioContext | null = null;
+
+function playTypewriterTick(isComplete = false) {
+  if (typeof window === 'undefined') return;
+  try {
+    if (window.matchMedia?.('(prefers-reduced-motion: reduce)').matches) return;
+    const AudioCtx = window.AudioContext || (window as unknown as { webkitAudioContext: typeof AudioContext }).webkitAudioContext;
+    if (!AudioCtx) return;
+    if (!sharedAudioCtx) {
+      sharedAudioCtx = new AudioCtx();
+    }
+    if (sharedAudioCtx.state === 'suspended') {
+      sharedAudioCtx.resume().catch(() => {});
+    }
+
+    const now = sharedAudioCtx.currentTime;
+
+    // Crisp mechanical key click (short filtered noise burst)
+    const bufferSize = Math.floor(sharedAudioCtx.sampleRate * 0.018);
+    const buffer = sharedAudioCtx.createBuffer(1, bufferSize, sharedAudioCtx.sampleRate);
+    const data = buffer.getChannelData(0);
+    for (let i = 0; i < bufferSize; i++) {
+      data[i] = (Math.random() * 2 - 1) * Math.exp(-i / (bufferSize * 0.25));
+    }
+
+    const noise = sharedAudioCtx.createBufferSource();
+    noise.buffer = buffer;
+
+    const filter = sharedAudioCtx.createBiquadFilter();
+    filter.type = 'bandpass';
+    filter.frequency.setValueAtTime(isComplete ? 2400 : 1850 + Math.random() * 350, now);
+    filter.Q.setValueAtTime(1.8, now);
+
+    const gain = sharedAudioCtx.createGain();
+    gain.gain.setValueAtTime(isComplete ? 0.09 : 0.055, now);
+    gain.gain.exponentialRampToValueAtTime(0.001, now + 0.022);
+
+    noise.connect(filter);
+    filter.connect(gain);
+    gain.connect(sharedAudioCtx.destination);
+    noise.start(now);
+
+    // Subtle mechanical body thud
+    const osc = sharedAudioCtx.createOscillator();
+    const oscGain = sharedAudioCtx.createGain();
+    osc.type = 'triangle';
+    osc.frequency.setValueAtTime(isComplete ? 520 : 165 + Math.random() * 25, now);
+    osc.frequency.exponentialRampToValueAtTime(isComplete ? 880 : 75, now + 0.025);
+    oscGain.gain.setValueAtTime(isComplete ? 0.06 : 0.03, now);
+    oscGain.gain.exponentialRampToValueAtTime(0.001, now + 0.028);
+
+    osc.connect(oscGain);
+    oscGain.connect(sharedAudioCtx.destination);
+    osc.start(now);
+    osc.stop(now + 0.03);
+  } catch {
+    // Ignore audio errors if blocked by browser autoplay policy
+  }
+}
+
 interface WordsPreloaderProps {
   phase: WordPreloaderPhase;
   buttonOrigin?: { x: number; y: number } | null;
@@ -435,6 +496,7 @@ export const WordsPreloader: React.FC<WordsPreloaderProps> = ({
         if (current >= 100) {
           current = 100;
           setProgress(100);
+          playTypewriterTick(true);
           setIsLoaded(true);
           hasFinishedRef.current = true;
           if (onLoadingCompleteRef.current) onLoadingCompleteRef.current();
@@ -442,6 +504,7 @@ export const WordsPreloader: React.FC<WordsPreloaderProps> = ({
         }
 
         setProgress(current);
+        playTypewriterTick(false);
 
         // Deliberate, natural breathing pace
         let delay = 34;
