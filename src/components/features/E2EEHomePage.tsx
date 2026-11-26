@@ -122,21 +122,60 @@ export const E2EEHomePage: React.FC<E2EEHomePageProps> = ({ onNavigateToSimulato
           {/* LEFT: Aarav (Proportioned Editorial Illustration, Holding Phone) */}
           <div className="w-full flex flex-col items-center lg:items-end justify-center relative order-2 lg:order-1 pt-8 lg:pt-0">
             <div className="relative w-[175px] sm:w-[210px] md:w-[225px] lg:w-[235px] flex flex-col items-center">
-              {/* Sent Speech Bubble Pop-up */}
+              {/* Sent Speech Bubble Pop-up: Steady, shows delivered tick, then goes down as Meera's arrives */}
               <motion.div
-                initial={reducedMotion ? false : { opacity: 0, scale: 0.82, y: 10 }}
+                initial={false}
                 animate={
                   reducedMotion
-                    ? { opacity: 1 }
+                    ? { opacity: 1, y: 0, scale: 1 }
                     : journeyPhase === 'animating'
-                    ? { opacity: [1, 1, 0.72, 0.72, 1], scale: [1, 1.04, 1, 1, 1.03], y: [0, -3, 0, 0, -2] }
-                    : { opacity: 1, scale: 1, y: 0 }
+                    ? {
+                        opacity: [0, 1, 1, 1, 0, 0],
+                        y: [6, 0, 0, 0, 8, 8],
+                        scale: [0.94, 1, 1, 1, 0.96, 0.96],
+                      }
+                    : { opacity: 0, y: 6, scale: 0.94 }
                 }
-                transition={{ duration: journeyPhase === 'animating' ? 5.6 : 0.45, ease: [0.22, 1, 0.36, 1] }}
-                className="mb-2.5 sm:mb-0 sm:absolute sm:-top-11 sm:left-2 z-20 bg-[#FFFEF9] border-2 border-[#176B50]/45 text-[#153A32] text-sm sm:text-[15px] font-semibold px-4 py-2 rounded-t-2xl rounded-br-2xl shadow-[0_10px_28px_rgba(21,58,50,0.14)] whitespace-nowrap flex items-center gap-2"
+                transition={{
+                  duration: 5.6,
+                  times: [0, 0.08, 0.25, 0.48, 0.58, 1],
+                  ease: [0.22, 1, 0.36, 1],
+                }}
+                className="mb-2.5 sm:mb-0 sm:absolute sm:-top-11 sm:left-2 z-20 relative overflow-hidden bg-[#CFE3C9] border border-[#9EC098] text-[#153A32] text-sm sm:text-[15px] font-semibold px-4 py-2 rounded-t-2xl rounded-br-2xl shadow-[0_6px_16px_rgba(21,58,50,0.08)] whitespace-nowrap"
               >
-                <span className="w-2 h-2 rounded-full bg-[#176B50] shrink-0" aria-hidden="true" />
-                <span>See you tomorrow?</span>
+                <div
+                  className="absolute inset-0 pointer-events-none opacity-[0.16]"
+                  style={{
+                    backgroundImage: 'url(./whatsapp-doodle.svg)',
+                    backgroundRepeat: 'repeat',
+                    backgroundSize: '340px auto',
+                  }}
+                  aria-hidden="true"
+                />
+                <span className="relative z-10 inline-flex items-center gap-2">
+                  <span>See you tomorrow?</span>
+                  <motion.span
+                    initial={false}
+                    animate={
+                      reducedMotion
+                        ? { opacity: 1 }
+                        : journeyPhase === 'animating'
+                        ? { opacity: [0, 0, 1, 1, 0, 0] }
+                        : { opacity: 0 }
+                    }
+                    transition={{
+                      duration: 5.6,
+                      times: [0, 0.22, 0.30, 0.48, 0.58, 1],
+                    }}
+                    className="inline-flex items-center gap-1 text-[11px] font-medium text-[#176B50]"
+                    aria-label="Delivered"
+                  >
+                    <svg width="14" height="10" viewBox="0 0 16 11" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                      <path d="M1 5.5l3 3L10.5 2" />
+                      <path d="M6 5.5l3 3L15.5 2" />
+                    </svg>
+                  </motion.span>
+                </span>
               </motion.div>
 
               {/* Aarav Vector Illustration Artwork */}
@@ -201,21 +240,60 @@ export const E2EEHomePage: React.FC<E2EEHomePageProps> = ({ onNavigateToSimulato
           {/* RIGHT: Meera (Proportioned Editorial Illustration, Holding Phone) */}
           <div className="w-full flex flex-col items-center lg:items-start justify-center relative order-3 pt-8 lg:pt-0">
             <div className="relative w-[175px] sm:w-[210px] md:w-[225px] lg:w-[235px] flex flex-col items-center">
-              {/* Received Speech Bubble Pop-up: Decrypts when packet arrives */}
+              {/* Received Speech Bubble Pop-up: Rises simultaneously as Aarav's goes down, with blue double-tick */}
               <motion.div
-                initial={reducedMotion ? false : { opacity: 0, scale: 0.82, y: 10 }}
+                initial={false}
                 animate={
                   reducedMotion
-                    ? { opacity: 1 }
+                    ? { opacity: 1, y: 0, scale: 1 }
                     : journeyPhase === 'animating'
-                    ? { opacity: [0, 0, 0, 0, 1, 1], y: [8, 8, 8, 8, -3, 0], scale: [0.88, 0.88, 0.88, 0.88, 1.06, 1] }
-                    : { opacity: 1, scale: 1, y: 0 }
+                    ? {
+                        opacity: [0, 0, 1, 1, 1, 0],
+                        y: [8, 8, 0, 0, 0, 6],
+                        scale: [0.94, 0.94, 1, 1, 1, 0.96],
+                      }
+                    : { opacity: 0, y: 8, scale: 0.94 }
                 }
-                transition={{ duration: journeyPhase === 'animating' ? 5.6 : 0.45, times: journeyPhase === 'animating' ? [0, 0.72, 0.82, 0.86, 0.92, 1] : undefined, ease: [0.22, 1, 0.36, 1] }}
-                className="mb-2.5 sm:mb-0 sm:absolute sm:-top-11 sm:right-2 z-20 bg-[#FFFEF9] border-2 border-[#176B50]/45 text-[#153A32] text-sm sm:text-[15px] font-semibold px-4 py-2 rounded-t-2xl rounded-bl-2xl shadow-[0_10px_28px_rgba(21,58,50,0.14)] whitespace-nowrap flex items-center gap-2"
+                transition={{
+                  duration: 5.6,
+                  times: [0, 0.50, 0.60, 0.85, 0.94, 1],
+                  ease: [0.22, 1, 0.36, 1],
+                }}
+                className="mb-2.5 sm:mb-0 sm:absolute sm:-top-11 sm:right-2 z-20 relative overflow-hidden bg-[#CFE3C9] border border-[#9EC098] text-[#153A32] text-sm sm:text-[15px] font-semibold px-4 py-2 rounded-t-2xl rounded-bl-2xl shadow-[0_6px_16px_rgba(21,58,50,0.08)] whitespace-nowrap"
               >
-                <span className="w-2 h-2 rounded-full bg-[#176B50] shrink-0" aria-hidden="true" />
-                <span>See you tomorrow?</span>
+                <div
+                  className="absolute inset-0 pointer-events-none opacity-[0.16]"
+                  style={{
+                    backgroundImage: 'url(./whatsapp-doodle.svg)',
+                    backgroundRepeat: 'repeat',
+                    backgroundSize: '340px auto',
+                  }}
+                  aria-hidden="true"
+                />
+                <span className="relative z-10 inline-flex items-center gap-2">
+                  <span>See you tomorrow?</span>
+                  <motion.span
+                    initial={false}
+                    animate={
+                      reducedMotion
+                        ? { opacity: 1, scale: 1 }
+                        : journeyPhase === 'animating'
+                        ? { opacity: [0, 0, 1, 1, 0], scale: [0.8, 0.8, 1, 1, 0.9] }
+                        : { opacity: 0 }
+                    }
+                    transition={{
+                      duration: 5.6,
+                      times: [0, 0.58, 0.66, 0.94, 1],
+                    }}
+                    className="inline-flex items-center text-[#0095F6]"
+                    aria-label="Read"
+                  >
+                    <svg width="16" height="11" viewBox="0 0 16 11" fill="none" stroke="currentColor" strokeWidth="1.9" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                      <path d="M1 5.5l3 3L10.5 2" />
+                      <path d="M6 5.5l3 3L15.5 2" />
+                    </svg>
+                  </motion.span>
+                </span>
               </motion.div>
 
               {/* Meera Vector Illustration Artwork */}
