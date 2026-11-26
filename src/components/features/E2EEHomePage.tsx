@@ -122,19 +122,27 @@ export const E2EEHomePage: React.FC<E2EEHomePageProps> = ({ onNavigateToSimulato
           {/* LEFT: Aarav (Proportioned Editorial Illustration, Holding Phone) */}
           <div className="w-full flex flex-col items-center lg:items-end justify-center relative order-2 lg:order-1 pt-8 lg:pt-0">
             <div className="relative w-[175px] sm:w-[210px] md:w-[225px] lg:w-[235px] flex flex-col items-center">
-              {/* Sent Speech Bubble Pop-up: Stays 3s, slides in "Delivered", then BlockReveal-wipes away as Meera's arrives */}
+              {/* Sent Speech Bubble Pop-up: Stays 3s, slides in "Delivered", then wipes away directly to the side (no fade) */}
               <motion.div
                 initial={false}
                 animate={
                   reducedMotion
-                    ? { opacity: 1 }
+                    ? { clipPath: 'inset(0 0% 0 0)', opacity: 1 }
                     : journeyPhase === 'animating'
-                    ? { opacity: [0, 1, 1, 1, 0, 0] }
-                    : { opacity: 0 }
+                    ? {
+                        clipPath: [
+                          'inset(0 100% 0 0)',
+                          'inset(0 0% 0 0)',
+                          'inset(0 0% 0 0)',
+                          'inset(0 0% 0 100%)',
+                          'inset(0 0% 0 100%)',
+                        ],
+                      }
+                    : { clipPath: 'inset(0 100% 0 0)' }
                 }
                 transition={{
                   duration: 7.5,
-                  times: [0, 0.05, 0.40, 0.56, 0.62, 1],
+                  times: [0, 0.06, 0.56, 0.62, 1],
                   ease: [0.22, 1, 0.36, 1],
                 }}
                 className="mb-2.5 sm:mb-0 sm:absolute sm:-top-11 sm:left-2 z-20 relative overflow-hidden bg-[#CFE3C9] border border-[#9EC098] text-[#153A32] text-sm sm:text-[15px] font-semibold px-4 py-2 rounded-t-2xl rounded-br-2xl shadow-[0_6px_16px_rgba(21,58,50,0.08)] whitespace-nowrap"
@@ -157,15 +165,15 @@ export const E2EEHomePage: React.FC<E2EEHomePageProps> = ({ onNavigateToSimulato
                         ? { opacity: 1, width: 'auto' }
                         : journeyPhase === 'animating'
                         ? {
-                            opacity: [0, 0, 1, 1, 0],
-                            x: [-8, -8, 0, 0, 0],
-                            width: [0, 0, 'auto', 'auto', 0],
+                            opacity: [0, 0, 1, 1],
+                            x: [-8, -8, 0, 0],
+                            width: [0, 0, 'auto', 'auto'],
                           }
                         : { opacity: 0, width: 0 }
                     }
                     transition={{
                       duration: 7.5,
-                      times: [0, 0.39, 0.44, 0.56, 0.62],
+                      times: [0, 0.39, 0.44, 1],
                       ease: [0.22, 1, 0.36, 1],
                     }}
                     className="inline-flex items-center gap-1 text-[11px] font-medium text-[#176B50] overflow-hidden"
@@ -189,7 +197,7 @@ export const E2EEHomePage: React.FC<E2EEHomePageProps> = ({ onNavigateToSimulato
                     }
                     transition={{
                       duration: 7.5,
-                      times: [0, 0.54, 0.58, 0.60, 0.64],
+                      times: [0, 0.53, 0.56, 0.62, 0.64],
                       ease: [0.22, 1, 0.36, 1],
                     }}
                     className="absolute inset-0 z-20 bg-[#176B50] pointer-events-none"
@@ -260,19 +268,27 @@ export const E2EEHomePage: React.FC<E2EEHomePageProps> = ({ onNavigateToSimulato
           {/* RIGHT: Meera (Proportioned Editorial Illustration, Holding Phone) */}
           <div className="w-full flex flex-col items-center lg:items-start justify-center relative order-3 pt-8 lg:pt-0">
             <div className="relative w-[175px] sm:w-[210px] md:w-[225px] lg:w-[235px] flex flex-col items-center">
-              {/* Received Speech Bubble Pop-up: Enters simultaneously as Aarav's exits, with BlockReveal wipe & blue double-tick */}
+              {/* Received Speech Bubble Pop-up: Wipes in from the side simultaneously as Aarav's wipes out (no fade) */}
               <motion.div
                 initial={false}
                 animate={
                   reducedMotion
-                    ? { opacity: 1 }
+                    ? { clipPath: 'inset(0 0% 0 0)', opacity: 1 }
                     : journeyPhase === 'animating'
-                    ? { opacity: [0, 0, 1, 1, 0] }
-                    : { opacity: 0 }
+                    ? {
+                        clipPath: [
+                          'inset(0 100% 0 0)',
+                          'inset(0 100% 0 0)',
+                          'inset(0 0% 0 0)',
+                          'inset(0 0% 0 0)',
+                          'inset(0 0% 0 100%)',
+                        ],
+                      }
+                    : { clipPath: 'inset(0 100% 0 0)' }
                 }
                 transition={{
                   duration: 7.5,
-                  times: [0, 0.56, 0.61, 0.93, 0.99],
+                  times: [0, 0.56, 0.62, 0.93, 0.99],
                   ease: [0.22, 1, 0.36, 1],
                 }}
                 className="mb-2.5 sm:mb-0 sm:absolute sm:-top-11 sm:right-2 z-20 relative overflow-hidden bg-[#CFE3C9] border border-[#9EC098] text-[#153A32] text-sm sm:text-[15px] font-semibold px-4 py-2 rounded-t-2xl rounded-bl-2xl shadow-[0_6px_16px_rgba(21,58,50,0.08)] whitespace-nowrap"
@@ -294,12 +310,12 @@ export const E2EEHomePage: React.FC<E2EEHomePageProps> = ({ onNavigateToSimulato
                       reducedMotion
                         ? { opacity: 1, scale: 1 }
                         : journeyPhase === 'animating'
-                        ? { opacity: [0, 0, 1, 1, 0], scale: [0.85, 0.85, 1, 1, 0.9] }
+                        ? { opacity: [0, 0, 1, 1], scale: [0.85, 0.85, 1, 1] }
                         : { opacity: 0 }
                     }
                     transition={{
                       duration: 7.5,
-                      times: [0, 0.61, 0.67, 0.93, 0.99],
+                      times: [0, 0.61, 0.67, 1],
                     }}
                     className="inline-flex items-center text-[#0095F6]"
                     aria-label="Read"
