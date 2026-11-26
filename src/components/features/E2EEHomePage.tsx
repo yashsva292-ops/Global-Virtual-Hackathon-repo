@@ -98,7 +98,7 @@ export const E2EEHomePage: React.FC<E2EEHomePageProps> = ({ onNavigateToSimulato
       {/* Top Site Navigation Bar matching Reference Layout */}
       <header className="sticky top-0 z-40 flex items-center justify-between h-[76px] sm:h-[86px] px-6 sm:px-12 border-b border-[#D3DBCF] bg-[#F7F4EC]/95 backdrop-blur-md">
         <a href="#top" className="flex items-center gap-2.5 text-decoration-none group">
-          <img src="/assets/lock.svg" width="30" height="34" alt="Lock icon" className="transition-transform group-hover:scale-105" />
+          <img src="./assets/lock.svg" width="30" height="34" alt="Lock icon" className="transition-transform group-hover:scale-105" />
           <span className="text-xs sm:text-sm font-normal text-[#153A32] leading-tight tracking-tight">
             Delivered,<br />
             <b className="font-bold">never read.</b>
@@ -140,7 +140,7 @@ export const E2EEHomePage: React.FC<E2EEHomePageProps> = ({ onNavigateToSimulato
 
               {/* Aarav Vector Illustration Artwork */}
               <img
-                src="/assets/aarav.svg"
+                src="./assets/aarav.svg"
                 alt="Aarav holding his phone"
                 className="w-full h-auto object-contain drop-shadow-md select-none"
               />
@@ -216,7 +216,7 @@ export const E2EEHomePage: React.FC<E2EEHomePageProps> = ({ onNavigateToSimulato
 
               {/* Meera Vector Illustration Artwork */}
               <img
-                src="/assets/meera.svg"
+                src="./assets/meera.svg"
                 alt="Meera holding her phone"
                 className="w-full h-auto object-contain drop-shadow-md select-none"
               />
