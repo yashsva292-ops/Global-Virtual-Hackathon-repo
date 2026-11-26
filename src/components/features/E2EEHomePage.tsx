@@ -158,33 +158,53 @@ export const E2EEHomePage: React.FC<E2EEHomePageProps> = ({ onNavigateToSimulato
                 />
                 <span className="relative z-10 inline-flex items-center gap-2">
                   <span>See you tomorrow?</span>
-                  <motion.span
-                    initial={false}
-                    animate={
-                      reducedMotion
-                        ? { opacity: 1, width: 'auto' }
-                        : journeyPhase === 'animating'
-                        ? {
-                            opacity: [0, 0, 1, 1],
-                            x: [-8, -8, 0, 0],
-                            width: [0, 0, 'auto', 'auto'],
-                          }
-                        : { opacity: 0, width: 0 }
-                    }
-                    transition={{
-                      duration: 7.5,
-                      times: [0, 0.39, 0.44, 1],
-                      ease: [0.22, 1, 0.36, 1],
-                    }}
-                    className="inline-flex items-center gap-1 text-[11px] font-medium text-[#176B50] overflow-hidden"
-                    aria-label="Delivered"
-                  >
-                    <span>Delivered</span>
-                    <svg width="14" height="10" viewBox="0 0 16 11" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-                      <path d="M1 5.5l3 3L10.5 2" />
-                      <path d="M6 5.5l3 3L15.5 2" />
+                  {/* Authentic WhatsApp single-tick -> double-tick -> blue double-tick */}
+                  <span className="inline-flex items-center" aria-label="Delivered">
+                    <svg width="18" height="11" viewBox="0 0 18 11" fill="none" aria-hidden="true">
+                      <motion.path
+                        d="M1.5 5.8L4.8 9.2L11.5 1.8"
+                        strokeWidth="1.65"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        initial={false}
+                        animate={
+                          reducedMotion
+                            ? { opacity: 1, stroke: '#53BDEB' }
+                            : journeyPhase === 'animating'
+                            ? {
+                                opacity: [0, 0, 1, 1, 1],
+                                stroke: ['#667781', '#667781', '#667781', '#53BDEB', '#53BDEB'],
+                              }
+                            : { opacity: 0, stroke: '#667781' }
+                        }
+                        transition={{
+                          duration: 7.5,
+                          times: [0, 0.16, 0.22, 0.42, 1],
+                        }}
+                      />
+                      <motion.path
+                        d="M6.5 5.8L9.8 9.2L16.5 1.8"
+                        strokeWidth="1.65"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        initial={false}
+                        animate={
+                          reducedMotion
+                            ? { opacity: 1, stroke: '#53BDEB' }
+                            : journeyPhase === 'animating'
+                            ? {
+                                opacity: [0, 0, 1, 1],
+                                stroke: ['#667781', '#667781', '#53BDEB', '#53BDEB'],
+                              }
+                            : { opacity: 0, stroke: '#667781' }
+                        }
+                        transition={{
+                          duration: 7.5,
+                          times: [0, 0.36, 0.42, 1],
+                        }}
+                      />
                     </svg>
-                  </motion.span>
+                  </span>
                 </span>
                 {/* BlockReveal wipe overlay when Aarav's pop-up exits */}
                 {!reducedMotion && (
@@ -317,12 +337,12 @@ export const E2EEHomePage: React.FC<E2EEHomePageProps> = ({ onNavigateToSimulato
                       duration: 7.5,
                       times: [0, 0.61, 0.67, 1],
                     }}
-                    className="inline-flex items-center text-[#0095F6]"
+                    className="inline-flex items-center text-[#53BDEB]"
                     aria-label="Read"
                   >
-                    <svg width="16" height="11" viewBox="0 0 16 11" fill="none" stroke="currentColor" strokeWidth="1.9" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-                      <path d="M1 5.5l3 3L10.5 2" />
-                      <path d="M6 5.5l3 3L15.5 2" />
+                    <svg width="18" height="11" viewBox="0 0 18 11" fill="none" stroke="currentColor" strokeWidth="1.65" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                      <path d="M1.5 5.8L4.8 9.2L11.5 1.8" />
+                      <path d="M6.5 5.8L9.8 9.2L16.5 1.8" />
                     </svg>
                   </motion.span>
                 </span>
