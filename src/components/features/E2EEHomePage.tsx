@@ -196,7 +196,7 @@ export const E2EEHomePage: React.FC<E2EEHomePageProps> = ({ onNavigateToSimulato
                         }
                         transition={{
                           duration: 7.5,
-                          times: [0, 0.36, 0.42, 1],
+                          times: [0, 0.24, 0.30, 1],
                         }}
                       />
                     </svg>
