@@ -6,6 +6,7 @@ import { E2EEHomePage } from './components/features/E2EEHomePage';
 import { MainGuidedSimulator } from './components/features/MainGuidedSimulator';
 import { DeeperExplorationSection } from './components/features/DeeperExplorationSection';
 import { WhyPrivacyMattersStory } from './components/features/WhyPrivacyMattersStory';
+import { FuturePrivacySection } from './components/features/FuturePrivacySection';
 import { ClosingSectionAndFooter } from './components/features/ClosingSectionAndFooter';
 import { GreetingPreloader } from './components/GreetingPreloader';
 import { WordsPreloader, unlockLoadingAudio, type WordPreloaderPhase } from './components/WordsPreloader';
@@ -35,7 +36,7 @@ export const App: React.FC = () => {
   const [buttonOrigin, setButtonOrigin] = useState<{ x: number; y: number } | null>(null);
   const [simulatorScrollProgress, setSimulatorScrollProgress] = useState(0);
   const [scrollY, setScrollY] = useState(0);
-  const [activeSection, setActiveSection] = useState<'guided-simulator' | 'deeper-exploration' | 'why-privacy-matters' | 'closing-takeaway'>('guided-simulator');
+  const [activeSection, setActiveSection] = useState<'guided-simulator' | 'deeper-exploration' | 'why-privacy-matters' | 'future-privacy' | 'closing-takeaway'>('guided-simulator');
   const simulatorRef = useRef<HTMLDivElement>(null);
   const transitionActiveRef = useRef(false);
 
@@ -283,7 +284,7 @@ export const App: React.FC = () => {
   // Track active section for the compact sticky section-navigation bar
   useEffect(() => {
     if (!isSimulatorMounted) return;
-    const sectionIds = ['guided-simulator', 'deeper-exploration', 'why-privacy-matters', 'closing-takeaway'] as const;
+    const sectionIds = ['guided-simulator', 'deeper-exploration', 'why-privacy-matters', 'future-privacy', 'closing-takeaway'] as const;
     const handleScrollSpy = () => {
       const triggerY = window.innerHeight * 0.32;
       let current: typeof sectionIds[number] = 'guided-simulator';
@@ -407,6 +408,7 @@ export const App: React.FC = () => {
                   { id: 'guided-simulator', label: 'Simulator' },
                   { id: 'deeper-exploration', label: 'A closer look' },
                   { id: 'why-privacy-matters', label: 'Why it matters' },
+                  { id: 'future-privacy', label: 'Future' },
                   { id: 'closing-takeaway', label: 'Takeaway' },
                 ].map((item) => {
                   const isActive = activeSection === item.id;
@@ -455,7 +457,12 @@ export const App: React.FC = () => {
             <WhyPrivacyMattersStory />
           </div>
 
-          {/* Section 3: The next time you see “end-to-end encrypted,” it’ll mean a little more. */}
+          {/* Section 3: Looking ahead / Future */}
+          <div className="relative z-[10]">
+            <FuturePrivacySection />
+          </div>
+
+          {/* Section 4: The next time you see “end-to-end encrypted,” it’ll mean a little more. */}
           <div className="relative z-[10]">
             <ClosingSectionAndFooter
               onRestartSimulator={() => {

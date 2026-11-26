@@ -578,7 +578,34 @@
   color: var(--muted);
 }
 
-/* SECTION 3: Closing */
+/* SECTION 3: Future (compact addition) */
+.ref-sections-root .future-section {
+  background: var(--paper);
+  scroll-margin-top: 84px;
+  padding: 40px 0;
+}
+
+.ref-sections-root .future-inner {
+  max-width: 680px;
+}
+
+.ref-sections-root .future-section .eyebrow {
+  margin-bottom: 10px;
+}
+
+.ref-sections-root .future-section h2 {
+  font-size: clamp(1.75rem, 2.8vw, 2.35rem);
+  line-height: 1.15;
+  margin-bottom: 14px;
+}
+
+.ref-sections-root .future-body p {
+  font-size: 16.5px;
+  line-height: 1.65;
+  color: var(--muted);
+}
+
+/* SECTION 4: Closing */
 .ref-sections-root .closing {
   position: relative;
   overflow: hidden;
@@ -791,6 +818,9 @@
   .ref-sections-root .story-window {
     padding: 24px 18px;
     min-height: 350px;
+  }
+  .ref-sections-root .future-section {
+    padding: 28px 0;
   }
   .ref-sections-root .closing {
     padding-top: 60px;
